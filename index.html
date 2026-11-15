@@ -80,6 +80,7 @@
                 <p>Status: <span id="metrics-status" class="text-amber-400 font-bold">Investigation</span></p>
                 <p>Case 01 Evidence: <span id="evidence-counter-1" class="text-emerald-400 font-bold">0 / 6</span></p>
                 <p>Case 02 Evidence: <span id="evidence-counter-2" class="text-cyan-400 font-bold">0 / 5</span></p>
+                <p>Case 03 Evidence: <span id="evidence-counter-3" class="text-emerald-400 font-bold">0 / 5</span></p>
             </div>
         </div>
 
@@ -261,14 +262,20 @@
                         </div>
                     </div>
                 </div>
+             <!-- لوحة أدلة القضية الثالثة (Case 03 - منسقة ومنظمة تماماً مثل القضية الأولى) -->
              <div id="board-grid-case-3" class="relative min-w-[580px] min-h-[160px] hidden">
-        <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
-            <line x1="15%" y1="28%" x2="40%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-            <line x1="40%" y1="28%" x2="65%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-            <line x1="65%" y1="28%" x2="90%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+             <line x1="12%" y1="28%" x2="37%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+            <line x1="37%" y1="28%" x2="63%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+            <line x1="63%" y1="28%" x2="88%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+            
+            <!-- النزول من آخر الصف الأول إلى بداية الصف الثاني -->
+            <line x1="88%" y1="28%" x2="12.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-60" />
+            
         </svg>
 
         <div class="grid grid-cols-4 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
+            <!-- دليل 1 -->
             <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                 <span class="text-emerald-400 font-bold mb-1">ANOMALY MAP</span>
                 <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
@@ -276,6 +283,7 @@
                 </div>
                 <span id="c3-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
             </div>
+            <!-- دليل 2 -->
             <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                 <span class="text-emerald-400 font-bold mb-1">EARLY VS RECENT</span>
                 <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
@@ -283,6 +291,7 @@
                 </div>
                 <span id="c3-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
             </div>
+            <!-- دليل 3 -->
             <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                 <span class="text-emerald-400 font-bold mb-1">GISTEMP RECORD</span>
                 <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
@@ -290,6 +299,7 @@
                 </div>
                 <span id="c3-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
             </div>
+            <!-- دليل 4 -->
             <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                 <span class="text-emerald-400 font-bold mb-1">REGIONAL MAP</span>
                 <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
@@ -297,12 +307,19 @@
                 </div>
                 <span id="c3-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
             </div>
-        </div>
-    </div>   
-
+            <!-- دليل 5 (يبدأ في الصف الثاني - تحت البطاقة الأولى) -->
+            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                <span class="text-emerald-400 font-bold mb-1">TREND ANALYSIS</span>
+                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
+                    <img src="assets/3P2.png" alt="3P2" class="w-full h-full object-cover pointer-events-none">
+                </div>
+                <span id="c3-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
             </div>
         </div>
     </div>
+
+    </div>
+   </div>
 
     <!-- الصندوق الأيسر (NASA Orbit Feed) -->
     <div class="col-span-12 md:col-span-3 flex flex-col items-center justify-center w-full">
@@ -415,7 +432,7 @@
                     🔄 Reset Case
                 </button>
             </div>
-            <span id="footer-status">NASA Climate Detective Engine v5.0</span>
+            <span id="footer-status">v5.0</span>
             <span id="page-indicator">Phase 1 of 6</span>
         </div>
     </div>

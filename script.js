@@ -232,6 +232,10 @@ function getCase2EvidenceText() {
     if (case2MaxPhase >= 6) return '5/ 5';
     return (case2MaxPhase - 1) + ' / 5';
 }
+function getCase3EvidenceText() {
+    if (case3MaxPhase >= 6) return '5 / 5';
+    return Math.max(0, case3MaxPhase - 1) + ' / 5';
+}
 
 function updateHeader(refTag, title, pageIndicator, c1CountText, c2CountText, boardTitle, boardText) {
     document.getElementById('doc-ref-tag').innerText = refTag;
@@ -1252,8 +1256,8 @@ function updateDetectiveBoard(phase, caseNum) {
                 }
             }
         }
-    } else if (caseNum === 3) {
-        for (let i = 2; i <= 4; i++) {
+   } else if (caseNum === 3) {
+        for (let i = 2; i <= 5; i++) {
             const el = document.getElementById(`c3-ev-${i}`);
             if (el) {
                 if (phase >= i) {
