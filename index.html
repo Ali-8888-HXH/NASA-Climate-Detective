@@ -389,7 +389,13 @@
                 <span id="intro-ref-tag" class="text-amber-400 font-bold uppercase tracking-wider">
                     🔒 TOP SECRET // NASA CLIMATE ARCHIVE
                 </span>
-                <span class="text-cyan-400/70 animate-pulse">CLASSIFIED BRIEFING</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-cyan-400/70 animate-pulse hidden sm:inline">CLASSIFIED BRIEFING</span>
+                    <!-- زر الإغلاق (×) -->
+                    <button onclick="closeIntroModal()" class="bg-stone-900 hover:bg-stone-800 text-slate-300 hover:text-white w-7 h-7 rounded-full font-bold flex items-center justify-center cursor-pointer transition text-xs border border-cyan-500/30">
+                        ✕
+                    </button>
+                </div>
             </div>
 
             <h2 id="intro-title" class="text-xl md:text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-amber-200 mb-3"></h2>

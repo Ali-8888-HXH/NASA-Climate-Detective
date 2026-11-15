@@ -1297,3 +1297,10 @@ function initBoardDragging() {
 document.addEventListener("DOMContentLoaded", function() {
     initBoardDragging();
 });
+function closeIntroModal() {
+    const introModal = document.getElementById('introModal');
+    if (introModal) {
+        introModal.classList.remove('opacity-100', 'pointer-events-auto');
+        introModal.classList.add('opacity-0', 'pointer-events-none');
+    }
+}
