@@ -73,9 +73,7 @@ function initImageDrag() {
     const img = document.getElementById('active-exhibit-img');
     if (!container || !img) return;
 
-
-img.ondragstart = (e) => e.preventDefault();
-
+    img.ondragstart = (e) => e.preventDefault();
 
     container.onmousedown = (e) => {
         if (currentZoom > 1) {
@@ -156,7 +154,7 @@ function startCaseFromIntro() {
         introModal.classList.add('opacity-0', 'pointer-events-none');
     }
 
-    currentPhase = (currentCase === 1) ? case1MaxPhase : case2MaxPhase;
+    currentPhase = (currentCase === 1) ? case1MaxPhase : (currentCase === 2) ? case2MaxPhase : case3MaxPhase;
     const modal = document.getElementById('docModal');
     if (modal) {
         modal.classList.add('active');
@@ -180,7 +178,7 @@ function resetCase() {
             solvedPhasesC1 = {}; 
             for (let i = 2; i <= 7; i++) {
                 const el = document.getElementById(`c1-ev-${i}`);
-            if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
+                if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
             }
         } else if (currentCase === 2) {
             case2MaxPhase = 1;
@@ -194,7 +192,7 @@ function resetCase() {
             case3MaxPhase = 1;
             case3IntroSeen = false;
             solvedPhasesC3 = {}; 
-            for (let i = 2; i <= 4; i++) {
+            for (let i = 2; i <= 5; i++) {
                 const el = document.getElementById(`c3-ev-${i}`);
                 if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
             }
@@ -229,21 +227,23 @@ function getCase1EvidenceText() {
 }
 
 function getCase2EvidenceText() {
-    if (case2MaxPhase >= 6) return '5/ 5';
-    return (case2MaxPhase - 1) + ' / 5';
+    if (case2MaxPhase >= 6) return '5 / 5';
+    return Math.max(0, case2MaxPhase - 1) + ' / 5';
 }
+
 function getCase3EvidenceText() {
     if (case3MaxPhase >= 6) return '5 / 5';
     return Math.max(0, case3MaxPhase - 1) + ' / 5';
 }
 
-function updateHeader(refTag, title, pageIndicator, c1CountText, c2CountText, boardTitle, boardText) {
+function updateHeader(refTag, title, pageIndicator, c1CountText, c2CountText, c3CountText, boardTitle, boardText) {
     document.getElementById('doc-ref-tag').innerText = refTag;
     document.getElementById('doc-title').innerText = title;
     document.getElementById('page-indicator').innerText = pageIndicator;
     
     document.getElementById('evidence-counter-1').innerText = c1CountText;
     document.getElementById('evidence-counter-2').innerText = c2CountText;
+    document.getElementById('evidence-counter-3').innerText = c3CountText;
     
     document.getElementById('board-title-status').innerText = boardTitle;
     document.getElementById('board-status-text').innerText = boardText;
@@ -255,11 +255,12 @@ function showFeedbackWithNext(message, isSuccess, nextPhaseNum) {
     
     feedbackBox.classList.remove('hidden');
     if (isSuccess) {
-        // حفظ أن المرحلة الحالية تم حلها مع رسالة التأكيد
         if (currentCase === 1) {
             solvedPhasesC1[currentPhase] = { message: message, nextPhase: nextPhaseNum };
         } else if (currentCase === 2) {
             solvedPhasesC2[currentPhase] = { message: message, nextPhase: nextPhaseNum };
+        } else if (currentCase === 3) {
+            solvedPhasesC3[currentPhase] = { message: message, nextPhase: nextPhaseNum };
         }
 
         feedbackBox.className = "p-3 rounded-lg text-xs font-mono bg-slate-900 border border-emerald-500 text-emerald-300 flex flex-col gap-2 mt-2 evidence-reveal";
@@ -280,7 +281,7 @@ function renderOptions(containerId, optionsArray, callbackName) {
     if (!container) return;
     container.innerHTML = "";
     
-    let savedData = (currentCase === 1) ? solvedPhasesC1[currentPhase] : solvedPhasesC2[currentPhase];
+    let savedData = (currentCase === 1) ? solvedPhasesC1[currentPhase] : (currentCase === 2) ? solvedPhasesC2[currentPhase] : solvedPhasesC3[currentPhase];
     let displayOptions = savedData ? optionsArray : shuffleArray([...optionsArray]);
     
     displayOptions.forEach((item, index) => {
@@ -303,7 +304,6 @@ function renderOptions(containerId, optionsArray, callbackName) {
         container.appendChild(btn);
     });
 
-    // إظهار صندوق النتيجة وزر الانتقال إذا كانت المرحلة محلولة مسبقاً
     if (savedData) {
         showFeedbackWithNext(savedData.message, true, savedData.nextPhase);
     }
@@ -342,14 +342,13 @@ function goToPhase(phase) {
     } else if (currentCase === 3) {
         case3MaxPhase = Math.max(case3MaxPhase, phase);
     }
-    
 
     const body = document.getElementById('modal-body-content');
     if (body) {
-    body.classList.remove('phase-fade-in');
-    void body.offsetWidth; 
-    body.classList.add('phase-fade-in');
-}
+        body.classList.remove('phase-fade-in');
+        void body.offsetWidth; 
+        body.classList.add('phase-fade-in');
+    }
     const backBtn = document.getElementById('back-btn');
     
     const feedbackTerminal = document.getElementById('feedback-terminal');
@@ -367,12 +366,14 @@ function goToPhase(phase) {
         loadCase1Phases(phase, body);
     } else if (currentCase === 2) {
         loadCase2Phases(phase, body);
+    } else if (currentCase === 3) {
+        loadCase3Phases(phase, body);
     }
-    else if (currentCase === 3) loadCase3Phases(phase, body);
 
     updateDetectiveBoard(phase, currentCase);
 
-let savedChain = (currentCase === 1) ? solvedPhasesC1[phase] : (currentCase === 2) ? solvedPhasesC2[phase] : solvedPhasesC3[phase];    if (savedChain) {
+    let savedChain = (currentCase === 1) ? solvedPhasesC1[phase] : (currentCase === 2) ? solvedPhasesC2[phase] : solvedPhasesC3[phase];    
+    if (savedChain) {
         const listId = (currentCase === 1 && phase === 7) ? 'causal-list-c1' : (currentCase === 2 && phase === 5) ? 'causal-list' : null;
         if (listId) {
             const container = document.getElementById(listId);
@@ -394,9 +395,10 @@ let savedChain = (currentCase === 1) ? solvedPhasesC1[phase] : (currentCase === 
 function loadCase1Phases(phase, body) {
     let c1Count = getCase1EvidenceText();
     let c2Count = getCase2EvidenceText();
+    let c3Count = getCase3EvidenceText();
 
     if (phase === 1) {
-        updateHeader('PHASE 01 — CASE FILE', 'The Vanishing Ice', 'Phase 1 of 8', c1Count, c2Count, 'Status: Active Investigation', 'Investigating Arctic Sea Ice minimum anomalies...');
+        updateHeader('PHASE 01 — CASE FILE', 'The Vanishing Ice', 'Phase 1 of 8', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Investigating Arctic Sea Ice minimum anomalies...');
         body.innerHTML = `
             <p>Every year, the Arctic Ocean freezes and melts with the seasons. In winter, sea ice expands. In summer, it retreats.</p>
             <p>Satellite observations spanning decades show an unusual downward shift. Your mission is to determine if this is natural or system-wide.</p>
@@ -408,7 +410,7 @@ function loadCase1Phases(phase, body) {
         loadExhibit('🛰️ EXHIBIT #01 — HISTORICAL BASELINE (1979)', 'assets/P1.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">Baseline Status: Stable Ice Cover</div>`);
     } 
     else if (phase === 2) {
-        updateHeader('PHASE 02 — THE FIRST CLUE', 'Evidence #01 — Seasonal Cycles', 'Phase 2 of 8', c1Count, c2Count, 'Status: Active Investigation', 'Evidence #01 Logged.');
+        updateHeader('PHASE 02 — THE FIRST CLUE', 'Evidence #01 — Seasonal Cycles', 'Phase 2 of 8', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Evidence #01 Logged.');
         body.innerHTML = `
             <p>Sea ice naturally expands in winter and shrinks in summer. We need to compare the Arctic across many years to find the real pattern.</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="p2-options-container"></div></div>
@@ -420,7 +422,7 @@ function loadCase1Phases(phase, body) {
         ], 'answerPhase2');
     }
     else if (phase === 3) {
-        updateHeader('PHASE 03 — SATELLITE RECORD', 'Evidence #02 — 40+ Years Observation', 'Phase 3 of 8', c1Count, c2Count, 'Status: Active Investigation', 'Evidence #02 Logged.');
+        updateHeader('PHASE 03 — SATELLITE RECORD', 'Evidence #02 — 40+ Years Observation', 'Phase 3 of 8', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Evidence #02 Logged.');
         body.innerHTML = `
             <p>Let's examine satellite observations of September minimums from 1979 to the present.</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="p3-options-container"></div></div>
@@ -433,7 +435,7 @@ function loadCase1Phases(phase, body) {
         ], 'answerPhase3');
     }
     else if (phase === 4) {
-        updateHeader('PHASE 04 — SPATIAL ANALYSIS', 'Evidence #03 & #04 — Regional Sectors', 'Phase 4 of 8', c1Count, c2Count, 'Status: Active Investigation', 'Evidence #03/04 Logged.');
+        updateHeader('PHASE 04 — SPATIAL ANALYSIS', 'Evidence #03 & #04 — Regional Sectors', 'Phase 4 of 8', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Evidence #03/04 Logged.');
         body.innerHTML = `
             <p>Let's inspect regional satellite maps and spatial boundaries where ice is lost.</p>
             
@@ -455,7 +457,7 @@ function loadCase1Phases(phase, body) {
         ], 'answerPhase4');
     }
     else if (phase === 5) {
-        updateHeader('PHASE 05 — TEMPERATURE', 'Evidence #05 — Temperature Connection', 'Phase 5 of 8', c1Count, c2Count, 'Status: Active Investigation', 'Evidence #05 Logged.');
+        updateHeader('PHASE 05 — TEMPERATURE', 'Evidence #05 — Temperature Connection', 'Phase 5 of 8', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Evidence #05 Logged.');
         body.innerHTML = `
             <p>If warming contributes to ice decline, what should we expect in temperature records?</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="p5-options-container"></div></div>
@@ -468,7 +470,7 @@ function loadCase1Phases(phase, body) {
         ], 'answerPhase5Pred');
     }
     else if (phase === 6) {
-        updateHeader('CASE 01 — PHASE 06 — ARCTIC AMPLIFICATION', 'NASA Earth Observatory Evidence', 'Phase 6 of 8', c1Count, c2Count, 'Status: Active Investigation', 'Analyzing Arctic Amplification metrics...');
+        updateHeader('CASE 01 — PHASE 06 — ARCTIC AMPLIFICATION', 'NASA Earth Observatory Evidence', 'Phase 6 of 8', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Analyzing Arctic Amplification metrics...');
         body.innerHTML = `
             <div class="space-y-3">
                 <div class="flex items-center gap-2 border-b border-amber-800/30 pb-2">
@@ -497,7 +499,7 @@ function loadCase1Phases(phase, body) {
         ], 'answerPhase6');
     }
     else if (phase === 7) {
-        updateHeader('CASE 01 — PHASE 07', 'Evidence #07 — Causal Chain Assembly', 'Phase 7 of 8', c1Count, c2Count, 'Status: Active Investigation', 'Arranging Ice-Albedo feedback chain...');
+        updateHeader('CASE 01 — PHASE 07', 'Evidence #07 — Causal Chain Assembly', 'Phase 7 of 8', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Arranging Ice-Albedo feedback chain...');
         body.innerHTML = `
             <div class="space-y-3">
                 <p class="text-stone-800 font-sans">Arrange the Ice-Albedo feedback loop elements into the correct logical sequence using the <strong>(↑ ↓)</strong> arrows:</p>
@@ -564,7 +566,7 @@ function loadCase1Phases(phase, body) {
         loadExhibit('🔗 EXHIBIT — ICE-ALBEDO FEEDBACK', 'assets/P67.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-amber-200 font-mono">Positive Feedback Loop Mechanism</div>`);
     }
     else if (phase === 8) {
-        updateHeader('CASE 01 — VERDICT // CLOSED', 'Detective Report: Case 01 Solved', 'Completed (8/8)', c1Count, c2Count, 'CASE SOLVED / CLOSED', 'Investigation concluded successfully.');
+        updateHeader('CASE 01 — VERDICT // CLOSED', 'Detective Report: Case 01 Solved', 'Completed (8/8)', c1Count, c2Count, c3Count, 'CASE SOLVED / CLOSED', 'Investigation concluded successfully.');
         document.getElementById('metrics-status').innerText = 'Completed';
         document.getElementById('metrics-status').className = 'text-emerald-400 font-bold';
         document.getElementById('back-btn').classList.add('hidden');
@@ -580,11 +582,6 @@ function loadCase1Phases(phase, body) {
                 <p>✓ Spatial patterns identified: Where & How much</p>
                 <p>✓ Feedback mechanism: Ice-Albedo Confirmed</p>
             </div>
-
-
-
-
-
             <div class="mt-4 text-center">
                 <button onclick="closeDocumentModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold px-6 py-2.5 rounded cursor-pointer shadow">
                     Archive Case & Return to Desk ➔
@@ -599,9 +596,10 @@ function loadCase1Phases(phase, body) {
 function loadCase2Phases(phase, body) {
     let c1Count = getCase1EvidenceText();
     let c2Count = getCase2EvidenceText();
+    let c3Count = getCase3EvidenceText();
 
     if (phase === 1) {
-        updateHeader('CASE 02 — PHASE 01', 'India\'s Wheat Outlook (Jan 2022)', 'Phase 1 of 6', c1Count, c2Count, 'Status: Export Restriction', 'Investigating South Asia food supply vulnerability.');
+        updateHeader('CASE 02 — PHASE 01', "India's Wheat Outlook (Jan 2022)", 'Phase 1 of 6', c1Count, c2Count, c3Count, 'Status: Export Restriction', 'Investigating South Asia food supply vulnerability.');
         body.innerHTML = `
             <p><strong>Location:</strong> South Asia | <strong>Timeframe:</strong> January–May 2022.</p>
             <p>India expected a strong harvest and large reserves. Instead, in May 2022, India unexpectedly restricted wheat exports. What caused this sudden shift?</p>
@@ -618,7 +616,7 @@ function loadCase2Phases(phase, body) {
         ], 'answerCase2P1');
     } 
     else if (phase === 2) {
-        updateHeader('CASE 02 — PHASE 02', 'Evidence #01 — South Asia Heatwave', 'Phase 2 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Analyzing thermal anomalies.');
+        updateHeader('CASE 02 — PHASE 02', 'Evidence #01 — South Asia Heatwave', 'Phase 2 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Analyzing thermal anomalies.');
         body.innerHTML = `
             <p>Examine NASA GEOS modelled air temperatures across India and Pakistan in April 2022. The wheat supply didn't drop for no reason; something affected the crop prior to the export ban.</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3">
@@ -633,7 +631,7 @@ function loadCase2Phases(phase, body) {
         ], 'answerCase2P2');
     }
     else if (phase === 3) {
-        updateHeader('CASE 02 — PHASE 03', 'Evidence #02 — MODIS Vegetation Index', 'Phase 3 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Verifying crop health anomalies.');
+        updateHeader('CASE 02 — PHASE 03', 'Evidence #02 — MODIS Vegetation Index', 'Phase 3 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Verifying crop health anomalies.');
         body.innerHTML = `
             <div class="space-y-3">
                 <div class="flex items-center gap-2 border-b border-amber-800/30 pb-2">
@@ -670,7 +668,7 @@ function loadCase2Phases(phase, body) {
         ], 'answerPhase2P3');
     }
     else if (phase === 4) {
-        updateHeader('CASE 02 — PHASE 04 — TEMPERATURE ANOMALY TEST', 'NASA POWER Meteorological Data', 'Phase 4 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Analyzing daily maximum temperatures...');
+        updateHeader('CASE 02 — PHASE 04 — TEMPERATURE ANOMALY TEST', 'NASA POWER Meteorological Data', 'Phase 4 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Analyzing daily maximum temperatures...');
         body.innerHTML = `
             <div class="space-y-3">
                 <div class="flex items-center gap-2 border-b border-amber-800/30 pb-2">
@@ -708,7 +706,7 @@ function loadCase2Phases(phase, body) {
         ], 'answerPhase2P4');
     }
     else if (phase === 5) {
-        updateHeader('CASE 02 — PHASE 05', 'Evidence #04 — Causal Chain Assembly', 'Phase 5 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Arranging evidence chain.');
+        updateHeader('CASE 02 — PHASE 05', 'Evidence #04 — Causal Chain Assembly', 'Phase 5 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Arranging evidence chain.');
         body.innerHTML = `
             <div class="space-y-3">
                 <p class="text-stone-800 text-xs font-sans">Arrange the collected evidence into the most logical chain of events from climate trigger to export policy using the <strong>(↑ ↓)</strong> arrows:</p>
@@ -754,7 +752,7 @@ function loadCase2Phases(phase, body) {
         loadExhibit('🔗 EXHIBIT #05 — SYNTHESIS MAPPING', 'assets/2P4.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-amber-200 font-mono text-xs">Integrated Environmental Dataset </div>`);
     }
     else if (phase === 6) {
-        updateHeader('CASE 02 — VERDICT // CLOSED', 'Detective Report: Case 02 Solved', 'Completed (6/6)', c1Count, c2Count, 'CASE SOLVED / CLOSED', 'Climate event linked to food security.');
+        updateHeader('CASE 02 — VERDICT // CLOSED', 'Detective Report: Case 02 Solved', 'Completed (6/6)', c1Count, c2Count, c3Count, 'CASE SOLVED / CLOSED', 'Climate event linked to food security.');
         document.getElementById('metrics-status').innerText = 'Completed';
         document.getElementById('metrics-status').className = 'text-emerald-400 font-bold';
         document.getElementById('back-btn').classList.add('hidden');
@@ -782,9 +780,10 @@ function loadCase2Phases(phase, body) {
 function loadCase3Phases(phase, body) {
     let c1Count = getCase1EvidenceText();
     let c2Count = getCase2EvidenceText();
+    let c3Count = getCase3EvidenceText();
 
     if (phase === 1) {
-        updateHeader('PHASE 01 — CASE FILE', 'The Warming World: Temperature Anomalies', 'Phase 1 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Investigating global climate anomaly baseline...');
+        updateHeader('PHASE 01 — CASE FILE', 'The Warming World: Temperature Anomalies', 'Phase 1 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Investigating global climate anomaly baseline...');
         body.innerHTML = `
             <p>Earth's climate fluctuates naturally, but scientists observe a significant global temperature change since 1880. Some regions warm much faster than others.</p>
             <p>Your mission: Investigate historical temperature records, compare global anomaly maps, and discover why warming varies across regions.</p>
@@ -796,7 +795,7 @@ function loadCase3Phases(phase, body) {
         loadExhibit('🛰️ EXHIBIT #01 — GLOBAL TEMPERATURE ANOMALY (NASA SVS)', 'assets/2024.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">Source: NASA Goddard Institute for Space Studies (GISS)</div>`);
     }
     else if (phase === 2) {
-        updateHeader('PHASE 02 — THE FIRST CLUE', 'Evidence #01 — What Does "Normal Temperature" Mean?', 'Phase 2 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Analyzing temperature anomaly maps.');
+        updateHeader('PHASE 02 — THE FIRST CLUE', 'Evidence #01 — What Does "Normal Temperature" Mean?', 'Phase 2 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Analyzing temperature anomaly maps.');
         body.innerHTML = `
             <p>A temperature anomaly measures how much warmer or colder a place was compared with its historical reference average (Positive = warmer, Negative = colder).</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p2-options"></div></div>
@@ -810,7 +809,7 @@ function loadCase3Phases(phase, body) {
         ], 'answerCase3P2');
     }
     else if (phase === 3) {
-        updateHeader('PHASE 03 — HISTORICAL RECORD', 'Evidence #02 — More Than a Century of Temperatures', 'Phase 3 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Examining GISTEMP line graph.');
+        updateHeader('PHASE 03 — HISTORICAL RECORD', 'Evidence #02 — More Than a Century of Temperatures', 'Phase 3 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Examining GISTEMP line graph.');
         body.innerHTML = `
             <p>Examine the global annual temperature anomaly line graph from 1880 to the present (NASA GISTEMP record, reference period 1951-1980).</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p3-options"></div></div>
@@ -824,7 +823,7 @@ function loadCase3Phases(phase, body) {
         ], 'answerCase3P3');
     }
     else if (phase === 4) {
-        updateHeader('PHASE 04 — REGIONAL DIFFERENCES', 'Evidence #03 & #04 — The Geographic Puzzle', 'Phase 4 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Comparing regional warming rates.');
+        updateHeader('PHASE 04 — REGIONAL DIFFERENCES', 'Evidence #03 & #04 — The Geographic Puzzle', 'Phase 4 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Comparing regional warming rates.');
         body.innerHTML = `
             <p>Not all regions warm alike. Land and ocean areas respond differently based on their heat storage capacity.</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p4-options"></div></div>
@@ -838,7 +837,7 @@ function loadCase3Phases(phase, body) {
         ], 'answerCase3P4');
     }
     else if (phase === 5) {
-        updateHeader('PHASE 05 — TEST THE HYPOTHESIS', 'Evidence #05 — Is the Pattern Consistent?', 'Phase 5 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Validating multi-decadal trends.');
+        updateHeader('PHASE 05 — TEST THE HYPOTHESIS', 'Evidence #05 — Is the Pattern Consistent?', 'Phase 5 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Validating multi-decadal trends.');
         body.innerHTML = `
             <p>If Earth is experiencing a genuine long-term warming trend, what should we expect when we examine many decades of observations?</p>
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p5-options"></div></div>
@@ -852,7 +851,7 @@ function loadCase3Phases(phase, body) {
         ], 'answerCase3P5');
     }
     else if (phase === 6) {
-        updateHeader('CASE 03 — VERDICT // CLOSED', 'Detective Report: Case 03 Solved', 'Completed (6/6)', c1Count, c2Count, 'CASE SOLVED / CLOSED', 'Global climate anomaly pattern verified.');
+        updateHeader('CASE 03 — VERDICT // CLOSED', 'Detective Report: Case 03 Solved', 'Completed (6/6)', c1Count, c2Count, c3Count, 'CASE SOLVED / CLOSED', 'Global climate anomaly pattern verified.');
         document.getElementById('metrics-status').innerText = 'Completed';
         document.getElementById('metrics-status').className = 'text-emerald-400 font-bold';
         document.getElementById('back-btn').classList.add('hidden');
@@ -878,7 +877,6 @@ function loadCase3Phases(phase, body) {
     }
 }
 
-// ==========================================
 function updateTimeSlider(val) {
     let year = parseInt(val);
     const yearLabel = document.getElementById('slider-year-label');
@@ -891,7 +889,6 @@ function updateTimeSlider(val) {
         activeImg.src = `assets/${year}.png`;
     }
 }
-
 
 function answerPhase2(isCorrect, btn) {
     if (isCorrect) {
@@ -962,7 +959,6 @@ function answerCase2P2(isCorrect, btn) {
         showFeedbackWithNext("Incorrect analysis. Heatwaves stress crops rather than increasing yield.", false, 2);
     }
 }
-
 
 function answerPhase2P3(isCorrect, btnElement) {
     if (isCorrect) {
@@ -1088,7 +1084,7 @@ function verifyCausalChain() {
         showFeedbackWithNext("<strong>❌ Incorrect Order.</strong> Review the scientific sequence: Normal conditions ➔ Heatwave peak ➔ Crop stress ➔ Yield drop. Try rearranging!", false, 5);
     }
 }
-// --- (Draggable Bottom Drawer) ---
+
 const deskDrawer = document.getElementById('desk-drawer');
 const drawerHandle = document.getElementById('drawer-handle');
 
@@ -1133,23 +1129,19 @@ function startInvestigation() {
     const landingScreen = document.getElementById('landing-screen');
     const badge = document.getElementById('active-detective-badge');
     
-    // حفظ الاسم أو استخدام اسم افتراضي
     if (nameInput && nameInput.value.trim() !== "") {
         detectiveName = nameInput.value.trim();
     }
 
-    // تحديث اسم المحقق في لوحة الأدلة بشكل دائم
     if (badge) {
         badge.innerText = detectiveName;
     }
 
-    // تحديث نص لوحة الأدلة
     const boardText = document.getElementById('board-status-text');
     if (boardText) {
         boardText.innerText = `Case files ready for analysis. Select an archive below.`;
     }
 
-    // إخفاء شاشة الهبوط بسلاسة
     if (landingScreen) {
         landingScreen.style.opacity = '0';
         landingScreen.style.transform = 'scale(1.03)';
@@ -1159,30 +1151,28 @@ function startInvestigation() {
     }
 }
 
-// السماح بالضغط على زر Enter داخل حقل الاسم لبدء التحقيق مباشرة
 document.getElementById('detective-name-input')?.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         startInvestigation();
     }
 });
- function openCreditsModal() {
-            const modal = document.getElementById('creditsModal');
-            if (modal) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                modal.classList.add('opacity-100', 'pointer-events-auto');
-            }
-        }
 
-        function closeCreditsModal() {
-            const modal = document.getElementById('creditsModal');
-            if (modal) {
-                modal.classList.remove('opacity-100', 'pointer-events-auto');
-                modal.classList.add('opacity-0', 'pointer-events-none');
-            }
-        }
-     // ==========================================
-// --- التبديل بين القضايا في لوحة الأدلة (Tabs) ---
-// ==========================================
+function openCreditsModal() {
+    const modal = document.getElementById('creditsModal');
+    if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+    }
+}
+
+function closeCreditsModal() {
+    const modal = document.getElementById('creditsModal');
+    if (modal) {
+        modal.classList.remove('opacity-100', 'pointer-events-auto');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+}
+
 function switchBoardCase(caseNum) {
     const grid1 = document.getElementById('board-grid-case-1');
     const grid2 = document.getElementById('board-grid-case-2');
@@ -1193,17 +1183,14 @@ function switchBoardCase(caseNum) {
 
     if (!grid1 || !grid2 || !grid3 || !tab1 || !tab2 || !tab3) return;
 
-    // إخفاء جميع الشبكات
     grid1.classList.add('hidden');
     grid2.classList.add('hidden');
     grid3.classList.add('hidden');
 
-    // إعادة تعيين أشكال الأزرار الثلاثة للحالة غير النشطة
     tab1.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap";
     tab2.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap";
     tab3.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap";
 
-    // تفعيل الشبكة واللون الخاص بالزر المستهدف فقط
     if (caseNum === 1) {
         grid1.classList.remove('hidden');
         tab1.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow text-center whitespace-nowrap";
@@ -1216,9 +1203,6 @@ function switchBoardCase(caseNum) {
     }
 }
 
-// ==========================================
-// --- تحديث حالة الأدلة المفتوحة لكل قضية -----
-// ==========================================
 function unlockEvidenceCard(elementId) {
     const el = document.getElementById(elementId);
     if (el) {
@@ -1256,7 +1240,7 @@ function updateDetectiveBoard(phase, caseNum) {
                 }
             }
         }
-   } else if (caseNum === 3) {
+    } else if (caseNum === 3) {
         for (let i = 2; i <= 5; i++) {
             const el = document.getElementById(`c3-ev-${i}`);
             if (el) {
@@ -1272,9 +1256,6 @@ function updateDetectiveBoard(phase, caseNum) {
     }
 }
 
-// ==========================================
-// --- تفعيل حركة السحب والإفلت للوحة الأدلة ---
-// ==========================================
 function initBoardDragging() {
     const boardContainer = document.getElementById('detective-board-wrapper');
     if (!boardContainer) return;
@@ -1313,7 +1294,6 @@ function initBoardDragging() {
     });
 }
 
-// تشغيل السحب عند تحميل الصفحة
 document.addEventListener("DOMContentLoaded", function() {
     initBoardDragging();
 });
