@@ -1,0 +1,88 @@
+{
+  "case_title": "The Missing Wheat",
+  "question": "Did unusual environmental conditions in 2022 coincide with changes in vegetation and wheat outcomes across six major wheat-producing states?",
+  "verdict": "Mixed evidence of temporal and spatial co-occurrence; the available state-level observational analyses do not establish causation.",
+  "study_area": [
+    "Uttar Pradesh",
+    "Madhya Pradesh",
+    "Punjab",
+    "Haryana",
+    "Rajasthan",
+    "Bihar"
+  ],
+  "environment_alignment": {
+    "harvest_season": "2021-22",
+    "environment_calendar_year": 2022,
+    "months": [
+      2,
+      3,
+      4
+    ]
+  },
+  "numerical_highlights": {
+    "tmax_feb_apr_anomaly_c": {
+      "Rajasthan": 2.13,
+      "Punjab": 1.26,
+      "Haryana": 1.16,
+      "Madhya Pradesh": 1.01,
+      "Uttar Pradesh": 0.19,
+      "Bihar": -0.43
+    },
+    "tmax_march_anomaly_c": {
+      "Rajasthan": 3.14,
+      "Punjab": 2.29,
+      "Haryana": 2.22,
+      "Madhya Pradesh": 1.93,
+      "Uttar Pradesh": 0.93,
+      "Bihar": 0.44
+    },
+    "feb_apr_yield_change_pct_2021_22": {
+      "Bihar": 0.47,
+      "Haryana": -6.23,
+      "Madhya Pradesh": 18.27,
+      "Punjab": -13.39,
+      "Rajasthan": 6.45,
+      "Uttar Pradesh": 0.0
+    },
+    "pooled_spearman_yield_change": {
+      "TMAX_anomaly": 0.2085,
+      "rainfall_anomaly": -0.2086,
+      "RH_anomaly": -0.2755,
+      "NDVI_anomaly": -0.1534,
+      "EVI_anomaly": -0.1596,
+      "n": 96
+    },
+    "pooled_climate_vegetation_spearman": {
+      "TMAX_vs_NDVI": -0.4655,
+      "TMAX_vs_EVI": -0.4533,
+      "rainfall_vs_NDVI": 0.2786,
+      "rainfall_vs_EVI": 0.2574,
+      "RH_vs_NDVI": 0.553,
+      "RH_vs_EVI": 0.5199,
+      "n": 355
+    }
+  },
+  "interpretation": [
+    "March and April were unusually warm in several states, but cold February means damped the seasonal average.",
+    "The March-April heat and rainfall departures coincided with mixed MODIS greenness responses and both yield increases and declines across states.",
+    "The yield-change correlations are modest and counterintuitive for heat; they are descriptive and vulnerable to repeated-measure dependence."
+  ],
+  "caveats": [
+    "NDVI/EVI measure greenness, not wheat yield, grain weight, or wheat-only vegetation.",
+    "MapSPAM 2020 wheat physical area is a static reference mask, not annual planted or harvested area.",
+    "PRECTOTCORR is NASA POWER/MERRA-2 corrected precipitation, not GPM IMERG.",
+    "TMAX is state-level maximum near-surface air temperature, not canopy or grain temperature.",
+    "Irrigation, soil moisture, cultivated area, crop management and local extremes are not fully represented.",
+    "The analysis cannot attribute yield changes or export restrictions to climate.",
+    "Pooled correlation p-values do not account for repeated state-year measures or clustering."
+  ],
+  "sources": {
+    "temperature": "NASA POWER T2M_MAX, daily, 2001-2022; project combined Parquet.",
+    "rainfall": "NASA POWER PRECTOTCORR, mm/day before aggregation; MERRA-2 corrected precipitation.",
+    "humidity": "NASA POWER RH2M, percent.",
+    "vegetation": "MODIS/061/MOD13A1; 16-day 500 m NDVI/EVI, scale factor 0.0001, strict DetailedQA mask.",
+    "wheat_area": "MapSPAM 2020 V2r2 wheat physical area, static spatial mask.",
+    "yield": "Government of India DA&FW Agricultural Statistics at a Glance 2023, Tables 2.32 and 2.5(b).",
+    "boundaries": "FAO GAUL 2024 Level 1 six-state boundaries."
+  }
+}

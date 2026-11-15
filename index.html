@@ -6,6 +6,8 @@
     <title>NASA Climate Detective - Dashboard</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body id="main-body" class="text-amber-100 flex items-center justify-center">
@@ -185,7 +187,7 @@
                 </div>
 
                 <!-- لوحة أدلة القضية الثانية (Case 02) -->
-                <div id="board-grid-case-2" class="relative min-w-[460px] min-h-[160px] hidden">
+                <div id="board-grid-case-2" class="relative min-w-[600px] min-h-[160px] hidden">
                     <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
                         <line x1="18%" y1="28%" x2="50%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
                         <line x1="50%" y1="28%" x2="82%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
@@ -193,30 +195,30 @@
                         <line x1="18%" y1="75%" x2="50%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
                     </svg>
 
-                    <div class="grid grid-cols-3 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
+                    <div class="grid grid-cols-5 gap-2 relative z-10 text-center font-mono text-[9px] pointer-events-auto p-1">
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                            <span class="text-amber-400 font-bold mb-1">WHEAT OUTLOOK</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P0.png" alt="2P0" class="w-full h-full object-cover pointer-events-none"></div>
-                            <span id="c2-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
+                            <span class="text-amber-400 font-bold mb-1">HEAT</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-lg" aria-hidden="true">🌡️</div>
+                            <span id="c2-ev-1" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                            <span class="text-amber-400 font-bold mb-1">HEATWAVE MAP</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P1.png" alt="2P1" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span class="text-amber-400 font-bold mb-1">RAINFALL</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-lg" aria-hidden="true">🌧️</div>
                             <span id="c2-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                            <span class="text-amber-400 font-bold mb-1">MODIS NDVI</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P2.png" alt="2P2" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span class="text-amber-400 font-bold mb-1">GREENNESS</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-lg" aria-hidden="true">🌿</div>
                             <span id="c2-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                            <span class="text-amber-400 font-bold mb-1">NASA POWER</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-red-400 font-bold text-[10px]">45.1°C</div>
+                            <span class="text-amber-400 font-bold mb-1">HARVEST</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-lg" aria-hidden="true">🌾</div>
                             <span id="c2-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                            <span class="text-amber-400 font-bold mb-1">SYNTHESIS</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P4.png" alt="2P4" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span class="text-amber-400 font-bold mb-1">VERDICT</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-lg" aria-hidden="true">🗂️</div>
                             <span id="c2-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                     </div>
@@ -312,7 +314,7 @@
             </div>
             <div class="mt-2">
                 <h3 class="text-cyan-100 font-bold leading-tight" style="font-size: 0.85em;">The Missing Wheat</h3>
-                <p class="text-slate-400 mt-1 leading-snug" style="font-size: 0.72em;">South Asia heatwave & export ban.</p>
+                <p class="text-slate-400 mt-1 leading-snug" style="font-size: 0.72em;">Investigate 2022 heat, vegetation and wheat outcomes.</p>
             </div>
             <div class="text-right text-cyan-400 font-bold group-hover:translate-x-1 transition mt-2" style="font-size: 0.75em;">
                 Open File ➔
@@ -380,6 +382,7 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="case02.js"></script>
    
     <!-- نافذة المقدمة الدرامية (Case Intro Briefing Modal) -->
     <div id="introModal" class="fixed inset-0 z-[65] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">

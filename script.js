@@ -115,12 +115,12 @@ function selectCase(caseNum) {
                 <p>Your directive as Lead Detective: Analyze the satellite archives from 1979 onward, isolate the seasonal variables, and uncover whether this downward spiral is a natural fluctuation or an irreversible tipping point.</p>
             `;
         } else if (caseNum === 2) {
-            introRefTag.innerText = "🔒 CASE 02 BRIEFING // SOUTH ASIA FOOD SECURITY";
-            introTitle.innerText = "The Missing Wheat: Heatwave Crisis";
+            introRefTag.innerText = "🔒 CASE 02 BRIEFING // THE MISSING WHEAT";
+            introTitle.innerText = "A wheat crisis, an open investigation";
             introBody.innerHTML = `
-                <p><strong>The Year: Spring 2022.</strong> South Asia is bracing for what was projected to be a record-breaking agricultural harvest to feed millions.</p>
-                <p>Suddenly, without warning, the government announces an emergency restriction on wheat exports. Global markets plunge into panic. Initial reports point toward an invisible, scorching catalyst sweeping across the agricultural belt.</p>
-                <p>Your directive as Lead Detective: Cross-reference NASA POWER meteorological data with MODIS vegetation indices to track the thermal anomaly, verify crop stress, and reconstruct the chain of events before global food security is compromised.</p>
+                <p><strong>Spring 2022.</strong> India is a major wheat producer. Concerns about domestic supply followed an unusual spring, and reports pointed to extreme heat. In May, India restricted wheat exports.</p>
+                <p>Reports identified heat as a major factor. How much support for that explanation can we find in NASA Earth observations and independent agricultural records?</p>
+                <p>You are the investigator. The clues may support, weaken or complicate the first explanation. We will compare six wheat-producing states and will not treat correlation as proof of cause.</p>
             `;
         } else if (caseNum === 3) {
             introRefTag.innerText = "🔒 CASE 03 BRIEFING // GLOBAL CLIMATE ANOMALY";
@@ -184,7 +184,8 @@ function resetCase() {
             case2MaxPhase = 1;
             case2IntroSeen = false;
             solvedPhasesC2 = {}; 
-            for (let i = 2; i <= 5; i++) {
+            if (typeof resetCase02State === 'function') resetCase02State();
+            for (let i = 1; i <= 5; i++) {
                 const el = document.getElementById(`c2-ev-${i}`);
                 if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
             }
@@ -227,8 +228,8 @@ function getCase1EvidenceText() {
 }
 
 function getCase2EvidenceText() {
-    if (case2MaxPhase >= 6) return '5 / 5';
-    return Math.max(0, case2MaxPhase - 1) + ' / 5';
+    if (case2MaxPhase >= 7) return '5 / 5';
+    return Math.max(0, Math.min(5, case2MaxPhase - 2)) + ' / 5';
 }
 
 function getCase3EvidenceText() {
@@ -334,6 +335,7 @@ function loadExhibit(titleText, imgSrc, extraInfoHtml) {
 
 function goToPhase(phase) {
     currentPhase = phase;
+    document.body.classList.toggle('case02-active', currentCase === 2);
     
     if (currentCase === 1) {
         case1MaxPhase = Math.max(case1MaxPhase, phase);
@@ -354,9 +356,9 @@ function goToPhase(phase) {
     const feedbackTerminal = document.getElementById('feedback-terminal');
     if (feedbackTerminal) feedbackTerminal.classList.add('hidden');
 
-    let maxPhases = (currentCase === 1) ? 8 : 6;
+    let maxPhases = (currentCase === 1) ? 8 : (currentCase === 2) ? 7 : 6;
     
-    if (currentPhase > 1 && currentPhase < maxPhases) {
+    if (currentPhase > 1 && (currentPhase < maxPhases || currentCase === 2)) {
         backBtn.classList.remove('hidden');
     } else {
         backBtn.classList.add('hidden');
@@ -370,11 +372,14 @@ function goToPhase(phase) {
         loadCase3Phases(phase, body);
     }
 
+    const exhibitBox = document.getElementById('exhibit-box');
+    if (exhibitBox) exhibitBox.classList.toggle('hidden', currentCase === 2);
+
     updateDetectiveBoard(phase, currentCase);
 
     let savedChain = (currentCase === 1) ? solvedPhasesC1[phase] : (currentCase === 2) ? solvedPhasesC2[phase] : solvedPhasesC3[phase];    
     if (savedChain) {
-        const listId = (currentCase === 1 && phase === 7) ? 'causal-list-c1' : (currentCase === 2 && phase === 5) ? 'causal-list' : null;
+        const listId = (currentCase === 1 && phase === 7) ? 'causal-list-c1' : null;
         if (listId) {
             const container = document.getElementById(listId);
             if (container) {
@@ -594,187 +599,7 @@ function loadCase1Phases(phase, body) {
 
 // ==========================================
 function loadCase2Phases(phase, body) {
-    let c1Count = getCase1EvidenceText();
-    let c2Count = getCase2EvidenceText();
-    let c3Count = getCase3EvidenceText();
-
-    if (phase === 1) {
-        updateHeader('CASE 02 — PHASE 01', "India's Wheat Outlook (Jan 2022)", 'Phase 1 of 6', c1Count, c2Count, c3Count, 'Status: Export Restriction', 'Investigating South Asia food supply vulnerability.');
-        body.innerHTML = `
-            <p><strong>Location:</strong> South Asia | <strong>Timeframe:</strong> January–May 2022.</p>
-            <p>India expected a strong harvest and large reserves. Instead, in May 2022, India unexpectedly restricted wheat exports. What caused this sudden shift?</p>
-            <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3">
-                <p class="font-bold text-stone-900 mb-2">🔍 HYPOTHESIS FORMULATION:</p>
-                <div class="flex flex-col gap-2" id="c2-p1-options"></div>
-            </div>
-        `;
-        loadExhibit('📊 EXHIBIT #01 — INITIAL WHEAT OUTLOOK', 'assets/2P0.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">Source: NASA POWER Meteorological Data </div>`);
-        renderOptions('c2-p1-options', [
-            { text: 'A harvest failure or crop stress occurred prior to export restrictions.', correct: true },
-            { text: 'A sudden deliberate shift in long-term trade policy without climate trigger.', correct: false },
-            { text: 'International trade disruption unrelated to domestic production.', correct: false }
-        ], 'answerCase2P1');
-    } 
-    else if (phase === 2) {
-        updateHeader('CASE 02 — PHASE 02', 'Evidence #01 — South Asia Heatwave', 'Phase 2 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Analyzing thermal anomalies.');
-        body.innerHTML = `
-            <p>Examine NASA GEOS modelled air temperatures across India and Pakistan in April 2022. The wheat supply didn't drop for no reason; something affected the crop prior to the export ban.</p>
-            <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3">
-                <p class="font-bold text-stone-900 mb-2">🌡️ EXAMINE THE HEATWAVE MAP:</p>
-                <div class="flex flex-col gap-2" id="c2-p2-options"></div>
-            </div>
-        `;
-        loadExhibit('🛰️ EXHIBIT #02 — 2022 HEATWAVE (NASA GEOS)', 'assets/2P1.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-red-400 font-mono text-xs">Maximum Air Temperature >44°C across cities </div>`);
-        renderOptions('c2-p2-options', [
-            { text: 'Extreme heat stresses wheat crops and severely reduces grain development.', correct: true },
-            { text: 'Heat improves grain quality and increases total crop yield.', correct: false }
-        ], 'answerCase2P2');
-    }
-    else if (phase === 3) {
-        updateHeader('CASE 02 — PHASE 03', 'Evidence #02 — MODIS Vegetation Index', 'Phase 3 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Verifying crop health anomalies.');
-        body.innerHTML = `
-            <div class="space-y-3">
-                <div class="flex items-center gap-2 border-b border-amber-800/30 pb-2">
-                    <span class="text-amber-900 font-mono text-xs font-bold tracking-wider">PHASE 03 — SATELLITE EVIDENCE</span>
-                    <span class="text-xs bg-amber-800/10 text-amber-900 px-2 py-0.5 rounded border border-amber-800/20">MOD13Q1 NDVI Data</span>
-                </div>
-                
-                <p class="text-stone-800 leading-relaxed font-sans">
-                    We examine 16-day composite vegetation index data (MODIS NDVI) across South Asia's wheat belts. A noticeable drop in greenness appears during the critical spring growing season.
-                </p>
-
-                <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg space-y-2">
-                    <p class="font-bold text-stone-900 text-xs">⚠️ Detective Warning / Scientific Caveat:</p>
-                    <p class="text-xs text-stone-700 leading-relaxed">
-                        A drop in NDVI alone is not definitive proof of crop failure. To confirm the anomaly, we must cross-reference it with another critical dataset.
-                    </p>
-                </div>
-
-                <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg">
-                    <p class="font-bold text-stone-900 mb-2 text-xs">🎯 What dataset must be paired with NDVI to confirm the wheat stress?</p>
-                    <div class="flex flex-col gap-2" id="p3-options-container"></div>
-                </div>
-
-                <div id="p3-feedback" class="hidden text-xs p-2.5 rounded-lg border"></div>
-            </div>
-        `;
-        
-        loadExhibit('🛰️ EXHIBIT — MODIS VEGETATION ANOMALY', 'assets/2P2.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-amber-200 font-mono text-xs">MODIS 250m Resolution Vegetation Index Verified</div>`);
-        
-        renderOptions('p3-options-container', [
-            { text: 'Daily maximum temperature and crop-calendar data to verify heat stress during the critical growth phase.', correct: true },
-            { text: 'Social media posts and local news headlines from agricultural regions.', correct: false },
-            { text: 'Global stock market prices for unrelated commodities.', correct: false }
-        ], 'answerPhase2P3');
-    }
-    else if (phase === 4) {
-        updateHeader('CASE 02 — PHASE 04 — TEMPERATURE ANOMALY TEST', 'NASA POWER Meteorological Data', 'Phase 4 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Analyzing daily maximum temperatures...');
-        body.innerHTML = `
-            <div class="space-y-3">
-                <div class="flex items-center gap-2 border-b border-amber-800/30 pb-2">
-                    <span class="text-amber-900 font-mono text-xs font-bold tracking-wider">PHASE 04 — TEMPERATURE ANOMALY TEST</span>
-                    <span class="text-xs bg-amber-800/10 text-amber-900 px-2 py-0.5 rounded border border-amber-800/20">NASA POWER Data</span>
-                </div>
-                
-                <p class="text-stone-800 leading-relaxed font-sans">
-                    Analyzing extracted daily maximum temperatures from NASA POWER for the Punjab agricultural belt (31.147°N, 75.341°E). Data captures the brutal late-season heatwave peak spanning <strong>late April into early May 2022</strong>, coinciding directly with the critical wheat ripening and grain-filling phase.
-                </p>
-
-                <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg space-y-2">
-                    <p class="font-bold text-stone-900 text-xs">📊 NASA POWER Extracted Metrics:</p>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-mono bg-white p-2.5 rounded border border-amber-200">
-                        <div>Historical Avg: <span class="font-bold text-stone-700">~32.0°C</span></div>
-                        <div>2022-04-30 Peak: <span class="font-bold text-red-700">45.12°C</span></div>
-                        <div>2022-05-01 Peak: <span class="font-bold text-red-700">43.53°C</span></div>
-                        <div>Source: <span class="font-bold text-stone-700">MERRA-2 / POWER</span></div>
-                    </div>
-                </div>
-
-                <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg">
-                    <p class="font-bold text-stone-900 mb-2 text-xs">🎯 Scientific Question: Do these extracted NASA POWER metrics confirm an extreme, atypical heatwave during the crop ripening phase?</p>
-                    <div class="flex flex-col gap-2" id="p4-options-container"></div>
-                </div>
-
-                <div id="feedback-container"></div>
-            </div>
-        `;
-        
-        renderOptions('p4-options-container', [
-            { text: 'Yes, temperatures exceeding 45°C confirm an extreme and damaging thermal anomaly that severely impacted wheat grain-filling.', correct: true },
-            { text: 'No, these temperatures are normal seasonal values for early spring.', correct: false },
-            { text: 'Temperatures dropped unexpectedly, causing frost rather than heat stress.', correct: false }
-        ], 'answerPhase2P4');
-    }
-    else if (phase === 5) {
-        updateHeader('CASE 02 — PHASE 05', 'Evidence #04 — Causal Chain Assembly', 'Phase 5 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Arranging evidence chain.');
-        body.innerHTML = `
-            <div class="space-y-3">
-                <p class="text-stone-800 text-xs font-sans">Arrange the collected evidence into the most logical chain of events from climate trigger to export policy using the <strong>(↑ ↓)</strong> arrows:</p>
-                
-                <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg space-y-2 text-xs font-mono" id="causal-list">
-                    <div data-id="3" class="bg-white p-2.5 rounded border border-stone-300 flex items-center justify-between shadow-sm">
-                        <span> Harvest falls below domestic expectations</span>
-                        <div class="flex gap-1">
-                            <button onclick="moveItem(this, -1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↑</button>
-                            <button onclick="moveItem(this, 1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↓</button>
-                        </div>
-                    </div>
-                    <div data-id="1" class="bg-white p-2.5 rounded border border-stone-300 flex items-center justify-between shadow-sm">
-                        <span> Extreme heat event in South Asia</span>
-                        <div class="flex gap-1">
-                            <button onclick="moveItem(this, -1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↑</button>
-                            <button onclick="moveItem(this, 1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↓</button>
-                        </div>
-                    </div>
-                    <div data-id="4" class="bg-white p-2.5 rounded border border-stone-300 flex items-center justify-between shadow-sm">
-                        <span> India restricts wheat exports to secure domestic supply</span>
-                        <div class="flex gap-1">
-                            <button onclick="moveItem(this, -1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↑</button>
-                            <button onclick="moveItem(this, 1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↓</button>
-                        </div>
-                    </div>
-                    <div data-id="2" class="bg-white p-2.5 rounded border border-stone-300 flex items-center justify-between shadow-sm">
-                        <span> Wheat crop under severe physiological stress</span>
-                        <div class="flex gap-1">
-                            <button onclick="moveItem(this, -1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↑</button>
-                            <button onclick="moveItem(this, 1)" class="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-stone-800 rounded font-bold">↓</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-3">
-                    <button onclick="verifyCausalChain()" class="bg-amber-800 hover:bg-amber-900 text-white font-bold px-4 py-2.5 rounded cursor-pointer w-full text-center text-xs shadow-sm transition-colors">Confirm Chain & View Verdict ➔</button>
-                </div>
-
-                <div id="feedback-container"></div>
-            </div>
-        `;
-        loadExhibit('🔗 EXHIBIT #05 — SYNTHESIS MAPPING', 'assets/2P4.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-amber-200 font-mono text-xs">Integrated Environmental Dataset </div>`);
-    }
-    else if (phase === 6) {
-        updateHeader('CASE 02 — VERDICT // CLOSED', 'Detective Report: Case 02 Solved', 'Completed (6/6)', c1Count, c2Count, c3Count, 'CASE SOLVED / CLOSED', 'Climate event linked to food security.');
-        document.getElementById('metrics-status').innerText = 'Completed';
-        document.getElementById('metrics-status').className = 'text-emerald-400 font-bold';
-        document.getElementById('back-btn').classList.add('hidden');
-
-        body.innerHTML = `
-            <div class="bg-emerald-100 border border-emerald-400 p-4 rounded-lg mb-3 shadow-inner">
-                <h3 class="font-bold text-emerald-900 mb-1 text-lg">🎉 CASE 02 — THE MISSING WHEAT: SOLVED!</h3>
-                <p class="font-mono text-xs text-emerald-950 font-bold mb-1">🏅 INVESTIGATOR: ${detectiveName}</p>
-                <p class="font-serif">Your evidence supports the conclusion that an extreme heat event across South Asia affected wheat during a critical stage of the growing season.</p>
-            </div>
-            <div class="space-y-1 font-mono bg-stone-100 p-3 rounded border text-sm">
-                <p>✓ EVIDENCE COLLECTED: 5/5</p>
-                <p>✓ CASE STATUS: SOLVED</p>
-            </div>
-            <div class="mt-4 text-center">
-                <button onclick="closeDocumentModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold px-6 py-2.5 rounded cursor-pointer shadow">
-                    Archive Case & Return to Desk ➔
-                </button>
-            </div>
-        `;
-        loadExhibit('🏆 ARCHIVE VERIFIED — CASE 02 SOLVED', 'assets/2P2.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-amber-200 font-mono text-center text-xs">Case 02 Successfully Closed & Verified via NASA Data</div>`);
-    }
+    if (typeof renderCase02Phase === 'function') renderCase02Phase(phase, body);
 }
 
 function loadCase3Phases(phase, body) {
@@ -949,49 +774,6 @@ function answerPhase5Pred(isCorrect, btn) {
     }
 }
 
-function answerCase2P1(isCorrect, btn) {
-    if (isCorrect) {
-        btn.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
-        showFeedbackWithNext("Correct hypothesis. Crop stress occurred prior to export restrictions.", true, 2);
-    } else {
-        btn.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60";
-        showFeedbackWithNext("Incorrect hypothesis. Re-evaluate domestic production factors.", false, 1);
-    }
-}
-
-function answerCase2P2(isCorrect, btn) {
-    if (isCorrect) {
-        btn.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
-        showFeedbackWithNext("Correct analysis. Extreme heat severely reduces wheat grain development.", true, 3);
-    } else {
-        btn.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60";
-        showFeedbackWithNext("Incorrect analysis. Heatwaves stress crops rather than increasing yield.", false, 2);
-    }
-}
-
-function answerPhase2P3(isCorrect, btnElement) {
-    if (isCorrect) {
-        btnElement.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
-        showFeedbackWithNext('<strong>✅ Correct!</strong> Scientific rigor maintained. NDVI data must be paired with meteorological temperature data to confirm agricultural stress.', true, 4);
-    } else {
-        btnElement.disabled = true;
-        btnElement.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60 cursor-not-allowed";
-        showFeedbackWithNext('<strong>❌ Incorrect.</strong> Think like a NASA scientist: standalone vegetation drops can have multiple causes. What data verifies weather conditions? Try another answer!', false, 3);
-    }
-}
-
-function answerPhase2P4(isCorrect, btnElement) {
-    if (isCorrect) {
-        document.querySelectorAll('#p4-options-container button').forEach(b => b.disabled = true);
-        btnElement.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
-        showFeedbackWithNext("<strong>✅ Correct!</strong> NASA POWER data confirms extreme temperature anomalies exceeding 45.12°C, severely impacting wheat grain-filling.", true, 5);
-    } else {
-        btnElement.disabled = true;
-        btnElement.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60 cursor-not-allowed";
-        showFeedbackWithNext("<strong>❌ Incorrect.</strong> Check the extracted NASA POWER metrics; temperatures reached record-breaking highs of over 45°C. Try another answer!", false, 4);
-    }
-}
-
 function answerCase3P2(isCorrect, btn) {
     if (isCorrect) {
         btn.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
@@ -1061,36 +843,6 @@ function verifyCausalChainC1() {
         showFeedbackWithNext("<strong>✅ Correct!</strong> Ice-Albedo feedback loop successfully reconstructed.", true, 8);
     } else {
         showFeedbackWithNext("<strong>❌ Incorrect Order.</strong> Review the feedback chain sequence and try rearranging!", false, 7);
-    }
-}
-
-function moveItem(btn, direction) {
-    const item = btn.closest('[data-id]');
-    const container = document.getElementById('causal-list');
-    
-    if (direction === -1 && item.previousElementSibling) {
-        container.insertBefore(item, item.previousElementSibling);
-    } else if (direction === 1 && item.nextElementSibling) {
-        container.insertBefore(item.nextElementSibling, item);
-    }
-}
-
-function verifyCausalChain() {
-    const container = document.getElementById('causal-list');
-    const items = container.querySelectorAll('[data-id]');
-    
-    let currentOrder = Array.from(items).map(i => i.getAttribute('data-id'));
-    let targetOrder = ['1', '2', '3', '4'];
-    
-    let isCorrect = currentOrder.every((val, index) => val === targetOrder[index]);
-
-    if (isCorrect) {
-        items.forEach(i => {
-            i.className = "bg-emerald-50 border-2 border-emerald-500 p-2.5 rounded-lg flex items-center justify-between shadow-sm text-xs font-sans font-bold text-emerald-900";
-        });
-        showFeedbackWithNext("<strong>✅ Correct!</strong> Perfect reconstruction of the agricultural failure causal chain.", true, 6);
-    } else {
-        showFeedbackWithNext("<strong>❌ Incorrect Order.</strong> Review the scientific sequence: Normal conditions ➔ Heatwave peak ➔ Crop stress ➔ Yield drop. Try rearranging!", false, 5);
     }
 }
 
@@ -1237,10 +989,10 @@ function updateDetectiveBoard(phase, caseNum) {
             }
         }
     } else if (caseNum === 2) {
-        for (let i = 2; i <= 5; i++) {
+        for (let i = 1; i <= 5; i++) {
             const el = document.getElementById(`c2-ev-${i}`);
             if (el) {
-                if (phase >= i) {
+                if (phase >= i + 2) {
                     el.innerText = "UNLOCKED";
                     el.className = "text-emerald-400 font-bold text-[9px]";
                 } else {
