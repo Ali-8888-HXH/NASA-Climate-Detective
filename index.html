@@ -108,15 +108,18 @@
                 <span id="active-detective-badge" class="text-cyan-300 font-bold uppercase tracking-wider text-sm">UNASSIGNED</span>
             </div>
 
-            <!-- أزرار التبديل بين القضايا (Tabs) -->
-            <div class="flex gap-2 mb-2 font-mono text-xs">
-                <button id="tab-case-1" onclick="switchBoardCase(1)" class="flex-1 py-1.5 px-3 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow">
-                    🧊 CASE 01: VANISHING ICE
-                </button>
-                <button id="tab-case-2" onclick="switchBoardCase(2)" class="flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition">
-                    🌾 CASE 02: MISSING WHEAT
-                </button>
-            </div>
+            <!-- أزرار التبديل بين القضايا (مع ميزة التمرير والترتيب المنظم) -->
+<div class="flex gap-2 mb-2 font-mono text-xs overflow-x-auto pb-1 scrollbar-thin">
+    <button id="tab-case-1" onclick="switchBoardCase(1)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow text-center whitespace-nowrap">
+        🧊 CASE 01
+    </button>
+    <button id="tab-case-2" onclick="switchBoardCase(2)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap">
+        🌾 CASE 02
+    </button>
+    <button id="tab-case-3" onclick="switchBoardCase(3)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap">
+        🌍 CASE 03
+    </button>
+</div>
 
             <!-- مستطيل الحالة (تم تعديل النص الإنجليزي ليصف القضايا التي في الأسفل) -->
             <div class="bg-slate-950/90 border border-cyan-500/30 border-l-4 border-l-cyan-400 px-3 py-2 rounded-lg mb-2.5 text-left font-mono shadow-inner">
@@ -258,6 +261,44 @@
                         </div>
                     </div>
                 </div>
+             <div id="board-grid-case-3" class="relative min-w-[580px] min-h-[160px] hidden">
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+            <line x1="15%" y1="28%" x2="40%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+            <line x1="40%" y1="28%" x2="65%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+            <line x1="65%" y1="28%" x2="90%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+        </svg>
+
+        <div class="grid grid-cols-4 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
+            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                <span class="text-emerald-400 font-bold mb-1">ANOMALY MAP</span>
+                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
+                    <img src="assets/2024.png" alt="2024" class="w-full h-full object-cover pointer-events-none">
+                </div>
+                <span id="c3-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
+            </div>
+            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                <span class="text-emerald-400 font-bold mb-1">EARLY VS RECENT</span>
+                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
+                    <img src="assets/1880-1884.png" alt="1880" class="w-full h-full object-cover pointer-events-none">
+                </div>
+                <span id="c3-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+            </div>
+            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                <span class="text-emerald-400 font-bold mb-1">GISTEMP RECORD</span>
+                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
+                    <img src="assets/3P1.png" alt="3P1" class="w-full h-full object-cover pointer-events-none">
+                </div>
+                <span id="c3-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+            </div>
+            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                <span class="text-emerald-400 font-bold mb-1">REGIONAL MAP</span>
+                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
+                    <img src="assets/1951-1980.png" alt="1951" class="w-full h-full object-cover pointer-events-none">
+                </div>
+                <span id="c3-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+            </div>
+        </div>
+    </div>   
 
             </div>
         </div>
@@ -318,6 +359,20 @@
                 Open File ➔
             </div>
         </div>
+
+        <!-- Case 03 -->
+<div onclick="selectCase(3)" class="bg-slate-900/90 hover:bg-slate-800 border-2 border-cyan-500/50 hover:border-cyan-400 flex-1 max-w-[14rem] min-h-[7rem] h-auto rounded-lg shadow-2xl shadow-cyan-950/50 cursor-pointer transition transform hover:-translate-y-1 flex flex-col justify-between p-3 md:p-4 relative group z-10 backdrop-blur-md">
+    <div class="absolute -top-3 left-3 bg-cyan-950 border border-cyan-500/60 text-cyan-300 px-2.5 py-0.5 rounded-t font-bold uppercase" style="font-size: 0.7em;">
+        📁 CASE 03
+    </div>
+    <div class="mt-2">
+        <h3 class="text-cyan-100 font-bold leading-tight" style="font-size: 0.85em;">The Warming World</h3>
+        <p class="text-slate-400 mt-1 leading-snug" style="font-size: 0.72em;">Global temperature anomaly records.</p>
+    </div>
+    <div class="text-right text-cyan-400 font-bold group-hover:translate-x-1 transition mt-2" style="font-size: 0.75em;">
+        Open File ➔
+    </div>
+</div>
 
     </div>
 </div>

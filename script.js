@@ -5,8 +5,10 @@ let modalFontSize = 14;
 
 let case1MaxPhase = 1;
 let case2MaxPhase = 1;
+let case3MaxPhase = 1;
 let solvedPhasesC1 = {}; 
 let solvedPhasesC2 = {}; 
+let solvedPhasesC3 = {};
 let detectiveName = "Lead Detective";
 
 let currentZoom = 1;
@@ -18,6 +20,7 @@ let startY = 0;
 
 let case1IntroSeen = false; 
 let case2IntroSeen = false; 
+let case3IntroSeen = false;
 
 function changeMainFontSize(delta) {
     mainFontSize = Math.max(11, Math.min(24, mainFontSize + delta));
@@ -98,6 +101,7 @@ function selectCase(caseNum) {
     if (!hasSeenIntro) {
         if (caseNum === 1) case1IntroSeen = true;
         if (caseNum === 2) case2IntroSeen = true;
+        if (caseNum === 3) case3IntroSeen = true;
 
         const introModal = document.getElementById('introModal');
         const introTitle = document.getElementById('intro-title');
@@ -119,6 +123,14 @@ function selectCase(caseNum) {
                 <p><strong>The Year: Spring 2022.</strong> South Asia is bracing for what was projected to be a record-breaking agricultural harvest to feed millions.</p>
                 <p>Suddenly, without warning, the government announces an emergency restriction on wheat exports. Global markets plunge into panic. Initial reports point toward an invisible, scorching catalyst sweeping across the agricultural belt.</p>
                 <p>Your directive as Lead Detective: Cross-reference NASA POWER meteorological data with MODIS vegetation indices to track the thermal anomaly, verify crop stress, and reconstruct the chain of events before global food security is compromised.</p>
+            `;
+        } else if (caseNum === 3) {
+            introRefTag.innerText = "🔒 CASE 03 BRIEFING // GLOBAL CLIMATE ANOMALY";
+            introTitle.innerText = "The Warming World: Temperature Anomalies";
+            introBody.innerHTML = `
+                <p><strong>The Year: Present Day.</strong> Earth's climate has never remained perfectly constant, but scientists are recording an unprecedented shift across more than a century.</p>
+                <p>Some regions warm much faster than others. Is the planet experiencing random fluctuations, or is there a deeper pattern hidden within the global data?</p>
+                <p>Your directive as Lead Detective: Analyze historical temperature records, compare NASA GISTEMP anomaly maps, and establish what the evidence reveals about global warming.</p>
             `;
         }
 
@@ -177,7 +189,14 @@ function resetCase() {
             for (let i = 2; i <= 5; i++) {
                 const el = document.getElementById(`c2-ev-${i}`);
                 if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
-                }
+            }
+        } else if (currentCase === 3) {
+            case3MaxPhase = 1;
+            case3IntroSeen = false;
+            solvedPhasesC3 = {}; 
+            for (let i = 2; i <= 4; i++) {
+                const el = document.getElementById(`c3-ev-${i}`);
+                if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
             }
         }
         
@@ -316,7 +335,10 @@ function goToPhase(phase) {
         case1MaxPhase = Math.max(case1MaxPhase, phase);
     } else if (currentCase === 2) {
         case2MaxPhase = Math.max(case2MaxPhase, phase);
+    } else if (currentCase === 3) {
+        case3MaxPhase = Math.max(case3MaxPhase, phase);
     }
+    
 
     const body = document.getElementById('modal-body-content');
     if (body) {
@@ -342,6 +364,8 @@ function goToPhase(phase) {
     } else if (currentCase === 2) {
         loadCase2Phases(phase, body);
     }
+    else if (currentCase === 3) loadCase3Phases(phase, body);
+
     updateDetectiveBoard(phase, currentCase);
 
 let savedChain = (currentCase === 1) ? solvedPhasesC1[phase] : (currentCase === 2) ? solvedPhasesC2[phase] : solvedPhasesC3[phase];    if (savedChain) {
@@ -751,6 +775,105 @@ function loadCase2Phases(phase, body) {
     }
 }
 
+function loadCase3Phases(phase, body) {
+    let c1Count = getCase1EvidenceText();
+    let c2Count = getCase2EvidenceText();
+
+    if (phase === 1) {
+        updateHeader('PHASE 01 — CASE FILE', 'The Warming World: Temperature Anomalies', 'Phase 1 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Investigating global climate anomaly baseline...');
+        body.innerHTML = `
+            <p>Earth's climate fluctuates naturally, but scientists observe a significant global temperature change since 1880. Some regions warm much faster than others.</p>
+            <p>Your mission: Investigate historical temperature records, compare global anomaly maps, and discover why warming varies across regions.</p>
+            <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3">
+                <p class="font-bold text-stone-900 mb-2">🔍 PHASE 1 OBJECTIVE:</p>
+                <button onclick="goToPhase(2)" class="bg-stone-900 hover:bg-stone-800 text-white font-bold px-4 py-2.5 rounded cursor-pointer w-full text-center">Begin Investigation ➔</button>
+            </div>
+        `;
+        loadExhibit('🛰️ EXHIBIT #01 — GLOBAL TEMPERATURE ANOMALY (NASA SVS)', 'assets/2024.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">Source: NASA Goddard Institute for Space Studies (GISS)</div>`);
+    }
+    else if (phase === 2) {
+        updateHeader('PHASE 02 — THE FIRST CLUE', 'Evidence #01 — What Does "Normal Temperature" Mean?', 'Phase 2 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Analyzing temperature anomaly maps.');
+        body.innerHTML = `
+            <p>A temperature anomaly measures how much warmer or colder a place was compared with its historical reference average (Positive = warmer, Negative = colder).</p>
+            <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p2-options"></div></div>
+        `;
+        loadExhibit('📊 EXHIBIT #02 — EARLY VS RECENT MAPS', 'assets/1880-1884.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">NASA World of Change Historical Maps</div>`);
+        renderOptions('c3-p2-options', [
+            { text: 'The region has the highest absolute temperature on Earth.', correct: false },
+            { text: 'The region is warmer than its reference-period average.', correct: true },
+            { text: 'The region has no seasonal changes.', correct: false },
+            { text: 'The region receives more sunlight than every other region.', correct: false }
+        ], 'answerCase3P2');
+    }
+    else if (phase === 3) {
+        updateHeader('PHASE 03 — HISTORICAL RECORD', 'Evidence #02 — More Than a Century of Temperatures', 'Phase 3 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Examining GISTEMP line graph.');
+        body.innerHTML = `
+            <p>Examine the global annual temperature anomaly line graph from 1880 to the present (NASA GISTEMP record, reference period 1951-1980).</p>
+            <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p3-options"></div></div>
+        `;
+        loadExhibit('📈 EXHIBIT #03 — GISTEMP GLOBAL MEAN ESTIMATES', 'assets/3P1.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">NASA GISS Land and Ocean Annual Anomalies & Lowess Smoothing</div>`);
+        renderOptions('c3-p3-options', [
+            { text: 'Global temperatures have remained approximately constant.', correct: false },
+            { text: 'Global temperatures have generally declined since 1880.', correct: false },
+            { text: 'Global temperatures have risen over the long term, despite short-term fluctuations.', correct: true },
+            { text: 'Every year has been warmer than the previous year.', correct: false }
+        ], 'answerCase3P3');
+    }
+    else if (phase === 4) {
+        updateHeader('PHASE 04 — REGIONAL DIFFERENCES', 'Evidence #03 & #04 — The Geographic Puzzle', 'Phase 4 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Comparing regional warming rates.');
+        body.innerHTML = `
+            <p>Not all regions warm alike. Land and ocean areas respond differently based on their heat storage capacity.</p>
+            <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p4-options"></div></div>
+        `;
+        loadExhibit('🛰️ EXHIBIT #04 — REGIONAL ANOMALY COMPARISON', 'assets/1951-1980.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-stone-300 font-mono text-xs">NASA GISTEMP Regional Maps</div>`);
+        renderOptions('c3-p4-options', [
+            { text: 'Every region warms at exactly the same rate.', correct: false },
+            { text: 'The global average can rise even when some regions warm more slowly than others.', correct: true },
+            { text: 'If one region cools temporarily, global warming must have stopped.', correct: false },
+            { text: 'Ocean temperatures always rise faster than land temperatures.', correct: false }
+        ], 'answerCase3P4');
+    }
+    else if (phase === 5) {
+        updateHeader('PHASE 05 — TEST THE HYPOTHESIS', 'Evidence #05 — Is the Pattern Consistent?', 'Phase 5 of 6', c1Count, c2Count, 'Status: Active Investigation', 'Validating multi-decadal trends.');
+        body.innerHTML = `
+            <p>If Earth is experiencing a genuine long-term warming trend, what should we expect when we examine many decades of observations?</p>
+            <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p5-options"></div></div>
+        `;
+        loadExhibit('🌡️ EXHIBIT #05 — MULTI-DECADE TREND ANALYSIS', 'assets/3P2.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-red-400 font-mono text-xs">NASA GISTEMP Interactive Maps</div>`);
+        renderOptions('c3-p5-options', [
+            { text: 'A long-term upward trend, even if individual years fluctuate.', correct: true },
+            { text: 'Identical temperatures in every region.', correct: false },
+            { text: 'A steady increase in every location every year.', correct: false },
+            { text: 'No relationship between long-term records and the global average.', correct: false }
+        ], 'answerCase3P5');
+    }
+    else if (phase === 6) {
+        updateHeader('CASE 03 — VERDICT // CLOSED', 'Detective Report: Case 03 Solved', 'Completed (6/6)', c1Count, c2Count, 'CASE SOLVED / CLOSED', 'Global climate anomaly pattern verified.');
+        document.getElementById('metrics-status').innerText = 'Completed';
+        document.getElementById('metrics-status').className = 'text-emerald-400 font-bold';
+        document.getElementById('back-btn').classList.add('hidden');
+
+        body.innerHTML = `
+            <div class="bg-emerald-100 border border-emerald-400 p-4 rounded-lg mb-3 shadow-inner">
+                <h3 class="font-bold text-emerald-900 mb-1 text-lg">🎉 CASE 03 — THE WARMING WORLD: SOLVED!</h3>
+                <p class="font-mono text-xs text-emerald-950 font-bold mb-1">🏅 INVESTIGATOR: ${detectiveName}</p>
+                <p class="font-serif text-emerald-800 leading-relaxed">Historical temperature records reveal a long-term rise in global surface temperature driven by anthropogenic greenhouse gases, with regionally varying rates of change.</p>
+            </div>
+            <div class="space-y-1 font-mono bg-stone-100 p-3 rounded border text-xs">
+                <p>✓ Evidence examined: 6/6</p>
+                <p>✓ Temperature trends identified: Verified</p>
+                <p>✓ Regional differences recognized: Validated</p>
+            </div>
+            <div class="mt-4 text-center">
+                <button onclick="closeDocumentModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold px-6 py-2.5 rounded cursor-pointer shadow">
+                    Archive Case & Return to Desk ➔
+                </button>
+            </div>
+        `;
+        loadExhibit('🏆 ARCHIVE VERIFIED — CASE 03 SOLVED', 'assets/2024.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-amber-200 font-mono text-center text-xs">Case 03 Successfully Closed & Verified via NASA GISTEMP</div>`);
+    }
+}
+
 // ==========================================
 function updateTimeSlider(val) {
     let year = parseInt(val);
@@ -834,7 +957,8 @@ function answerCase2P2(isCorrect, btn) {
         btn.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60";
         showFeedbackWithNext("Incorrect analysis. Heatwaves stress crops rather than increasing yield.", false, 2);
     }
-} 
+}
+
 
 function answerPhase2P3(isCorrect, btnElement) {
     if (isCorrect) {
@@ -856,6 +980,46 @@ function answerPhase2P4(isCorrect, btnElement) {
         btnElement.disabled = true;
         btnElement.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60 cursor-not-allowed";
         showFeedbackWithNext("<strong>❌ Incorrect.</strong> Check the extracted NASA POWER metrics; temperatures reached record-breaking highs of over 45°C. Try another answer!", false, 4);
+    }
+}
+
+function answerCase3P2(isCorrect, btn) {
+    if (isCorrect) {
+        btn.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
+        showFeedbackWithNext("Correct! A red region indicates temperatures warmer than its reference-period average.", true, 3);
+    } else {
+        btn.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60";
+        showFeedbackWithNext("Incorrect. Review the definition of temperature anomaly.", false, 2);
+    }
+}
+
+function answerCase3P3(isCorrect, btn) {
+    if (isCorrect) {
+        btn.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
+        showFeedbackWithNext("Correct! Global temperatures have risen over the long term despite short-term fluctuations.", true, 4);
+    } else {
+        btn.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60";
+        showFeedbackWithNext("Incorrect trend analysis. Examine the NASA GISTEMP curve.", false, 3);
+    }
+}
+
+function answerCase3P4(isCorrect, btn) {
+    if (isCorrect) {
+        btn.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
+        showFeedbackWithNext("Correct! The global average can rise even when regional warming rates vary.", true, 5);
+    } else {
+        btn.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60";
+        showFeedbackWithNext("Incorrect interpretation of regional map variations.", false, 4);
+    }
+}
+
+function answerCase3P5(isCorrect, btn) {
+    if (isCorrect) {
+        btn.className = "bg-emerald-100 border-2 border-emerald-500 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm font-bold text-emerald-900";
+        showFeedbackWithNext("Correct! Long-term upward trend confirmed across decades.", true, 6);
+    } else {
+        btn.className = "bg-red-100 border-2 border-red-400 p-2.5 rounded text-left flex gap-2 items-center w-full shadow-sm text-red-900 opacity-60";
+        showFeedbackWithNext("Incorrect hypothesis prediction.", false, 5);
     }
 }
 
@@ -1018,11 +1182,24 @@ document.getElementById('detective-name-input')?.addEventListener('keypress', fu
 function switchBoardCase(caseNum) {
     const grid1 = document.getElementById('board-grid-case-1');
     const grid2 = document.getElementById('board-grid-case-2');
+    const grid3 = document.getElementById('board-grid-case-3');
     const tab1 = document.getElementById('tab-case-1');
     const tab2 = document.getElementById('tab-case-2');
+    const tab3 = document.getElementById('tab-case-3');
 
     if (!grid1 || !grid2 || !grid3 || !tab1 || !tab2 || !tab3) return;
 
+    // إخفاء جميع الشبكات
+    grid1.classList.add('hidden');
+    grid2.classList.add('hidden');
+    grid3.classList.add('hidden');
+
+    // إعادة تعيين أشكال الأزرار الثلاثة للحالة غير النشطة
+    tab1.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap";
+    tab2.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap";
+    tab3.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap";
+
+    // تفعيل الشبكة واللون الخاص بالزر المستهدف فقط
     if (caseNum === 1) {
         grid1.classList.remove('hidden');
         tab1.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow text-center whitespace-nowrap";
@@ -1065,6 +1242,19 @@ function updateDetectiveBoard(phase, caseNum) {
     } else if (caseNum === 2) {
         for (let i = 2; i <= 5; i++) {
             const el = document.getElementById(`c2-ev-${i}`);
+            if (el) {
+                if (phase >= i) {
+                    el.innerText = "UNLOCKED";
+                    el.className = "text-emerald-400 font-bold text-[9px]";
+                } else {
+                    el.innerText = "LOCKED";
+                    el.className = "text-slate-400 font-bold text-[9px]";
+                }
+            }
+        }
+    } else if (caseNum === 3) {
+        for (let i = 2; i <= 4; i++) {
+            const el = document.getElementById(`c3-ev-${i}`);
             if (el) {
                 if (phase >= i) {
                     el.innerText = "UNLOCKED";
