@@ -94,9 +94,9 @@
         </div>
     </div>
 
-   <!-- الصندوق الأوسط (Interactive Multi-Case Detective Evidence Board) -->
+  <!-- الصندوق الأوسط (Interactive Multi-Case Detective Evidence Board) -->
     <div class="col-span-12 md:col-span-6 flex flex-col items-center w-full">
-        <div class="bg-slate-900/95 border-4 border-cyan-950 p-4 rounded-xl shadow-2xl w-full max-w-lg relative backdrop-blur-md shadow-cyan-950/60 cyber-panel cyber-hover">
+        <div class="bg-slate-900/95 border-4 border-cyan-950 p-4 rounded-xl shadow-2xl w-full max-w-xl relative backdrop-blur-md shadow-cyan-950/60 cyber-panel cyber-hover">
             
             <!-- عنوان اللوحة -->
             <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-900 text-amber-100 px-4 py-0.5 rounded font-bold font-mono text-xs shadow-lg border border-red-500/50 flex items-center gap-1.5 whitespace-nowrap">
@@ -109,20 +109,20 @@
                 <span id="active-detective-badge" class="text-cyan-300 font-bold uppercase tracking-wider text-sm">UNASSIGNED</span>
             </div>
 
-            <!-- أزرار التبديل بين القضايا (مع ميزة التمرير والترتيب المنظم) ---->
-<div class="flex gap-2 mb-2 font-mono text-xs overflow-x-auto pb-1 scrollbar-thin">
-    <button id="tab-case-1" onclick="switchBoardCase(1)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow text-center whitespace-nowrap">
-        🧊 CASE 01
-    </button>
-    <button id="tab-case-2" onclick="switchBoardCase(2)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap">
-        🌾 CASE 02
-    </button>
-    <button id="tab-case-3" onclick="switchBoardCase(3)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap">
-        🌍 CASE 03
-    </button>
-</div>
+            <!-- أزرار التبديل بين القضايا -->
+            <div class="flex gap-2 mb-2 font-mono text-xs overflow-x-auto pb-1 scrollbar-thin">
+                <button id="tab-case-1" onclick="switchBoardCase(1)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow text-center whitespace-nowrap">
+                    🧊 CASE 01
+                </button>
+                <button id="tab-case-2" onclick="switchBoardCase(2)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap">
+                    🌾 CASE 02
+                </button>
+                <button id="tab-case-3" onclick="switchBoardCase(3)" class="flex-1 min-w-[110px] py-1.5 px-2 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition text-center whitespace-nowrap">
+                    🌍 CASE 03
+                </button>
+            </div>
 
-            <!-- مستطيل الحالة (تم تعديل النص الإنجليزي ليصف القضايا التي في الأسفل) -->
+            <!-- مستطيل الحالة -->
             <div class="bg-slate-950/90 border border-cyan-500/30 border-l-4 border-l-cyan-400 px-3 py-2 rounded-lg mb-2.5 text-left font-mono shadow-inner">
                 <div class="flex items-center justify-between">
                     <p id="board-title-status" class="text-cyan-300 font-bold text-[11px] tracking-wide">Status: Active Investigation</p>
@@ -137,74 +137,48 @@
                 <!-- لوحة أدلة القضية الأولى (Case 01) -->
                 <div id="board-grid-case-1" class="relative min-w-[580px] min-h-[180px]">
                     <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
-                        <!-- ربط الصف الأول أفقياً: من البطاقة 1 إلى 2 إلى 3 إلى 4 -->
                         <line x1="12%" y1="28%" x2="37%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
                         <line x1="37%" y1="28%" x2="63%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
                         <line x1="63%" y1="28%" x2="88%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-                        
-                        <!-- النزول من آخر الصف الأول إلى بداية الصف الثاني -->
                         <line x1="88%" y1="28%" x2="12.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-60" />
-                        
-                        <!-- ربط الصف الثاني أفقياً -->
                         <line x1="12.5%" y1="75%" x2="37.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
                         <line x1="37.5%" y1="75%" x2="62.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
                     </svg>
 
                     <div class="grid grid-cols-4 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
-                        <!-- 1. 1979 Baseline -->
                         <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">1979 BASELINE</span>
-                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
-                                <img src="assets/P1.png" alt="P1" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1"><img src="assets/P1.png" alt="P1" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c1-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
                         </div>
-                        <!-- 2. Seasonal Cycles -->
                         <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">SEASONAL CYCLES</span>
-                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
-                                <img src="assets/P3.png" alt="P3" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1"><img src="assets/P3.png" alt="P3" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c1-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- 3. 40+ Yr Trend -->
                         <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">40+ YR TREND</span>
-                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
-                                <img src="assets/P2.png" alt="P2" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1"><img src="assets/P2.png" alt="P2" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c1-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- 4. Spatial Extent -->
                         <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">SPATIAL EXTENT</span>
-                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
-                                <img src="assets/P4.png" alt="P4" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1"><img src="assets/P4.png" alt="P4" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c1-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- 5. Ice Sectors -->
                         <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">ICE SECTORS</span>
-                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
-                                <img src="assets/P5.png" alt="P5" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1"><img src="assets/P5.png" alt="P5" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c1-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- 6. Temp Anomaly -->
                         <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">TEMP ANOMALY</span>
-                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
-                                <img src="assets/P6.png" alt="P6" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1"><img src="assets/P6.png" alt="P6" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c1-ev-6" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- 7. Albedo Feedback -->
                         <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">ALBEDO FEEDBACK</span>
-                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
-                                <img src="assets/P7.png" alt="P7" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1"><img src="assets/P7.png" alt="P7" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c1-ev-7" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                     </div>
@@ -220,107 +194,75 @@
                     </svg>
 
                     <div class="grid grid-cols-3 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
-                        <!-- دليل 1: 2P0 -->
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">WHEAT OUTLOOK</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
-                                <img src="assets/2P0.png" alt="2P0" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P0.png" alt="2P0" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c2-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
                         </div>
-                        <!-- دليل 2: 2P1 -->
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">HEATWAVE MAP</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
-                                <img src="assets/2P1.png" alt="2P1" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P1.png" alt="2P1" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c2-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- دليل 3: 2P2 -->
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">MODIS NDVI</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
-                                <img src="assets/2P2.png" alt="2P2" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P2.png" alt="2P2" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c2-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- دليل 4: NASA POWER -->
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-amber-400 font-bold mb-1">NASA POWER</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-red-400 font-bold text-[10px]">
-                                45.1°C
-                            </div>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-red-400 font-bold text-[10px]">45.1°C</div>
                             <span id="c2-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <!-- دليل 5: 2P4 -->
                         <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                            <span class="text-amber-400 font-bold mb-1">SYNTHESIS MAPPING</span>
-                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
-                                <img src="assets/2P4.png" alt="2P4" class="w-full h-full object-cover pointer-events-none">
-                            </div>
+                            <span class="text-amber-400 font-bold mb-1">SYNTHESIS</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1"><img src="assets/2P4.png" alt="2P4" class="w-full h-full object-cover pointer-events-none"></div>
                             <span id="c2-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                     </div>
                 </div>
-             <!-- لوحة أدلة القضية الثالثة (Case 03 - منسقة ومنظمة تماماً مثل القضية الأولى) -->
-             <div id="board-grid-case-3" class="relative min-w-[580px] min-h-[160px] hidden">
-                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
-             <line x1="12%" y1="28%" x2="37%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-            <line x1="37%" y1="28%" x2="63%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-            <line x1="63%" y1="28%" x2="88%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-            
-            <!-- النزول من آخر الصف الأول إلى بداية الصف الثاني -->
-            <line x1="88%" y1="28%" x2="12.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-60" />
-            
-        </svg>
 
-        <div class="grid grid-cols-4 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
-            <!-- دليل 1 -->
-            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                <span class="text-emerald-400 font-bold mb-1">ANOMALY MAP</span>
-                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
-                    <img src="assets/2024.png" alt="2024" class="w-full h-full object-cover pointer-events-none">
+                <!-- لوحة أدلة القضية الثالثة (Case 03 - مصممة أفقياً بالكامل بـ 5 بطاقات متجاورة وبدون تداخل) -->
+                <div id="board-grid-case-3" class="relative min-w-[540px] min-h-[160px] hidden">
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="10%" y1="40%" x2="30%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="30%" y1="40%" x2="50%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="50%" y1="40%" x2="70%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="70%" y1="40%" x2="90%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                    </svg>
+
+                    <div class="grid grid-cols-5 gap-2 relative z-10 text-center font-mono text-[9px] pointer-events-auto p-1">
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                            <span class="text-emerald-400 font-bold mb-1">ANOMALY</span>
+                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/2024.png" alt="2024" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-1" class="text-emerald-400 font-bold text-[8px]">UNLOCKED</span>
+                        </div>
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                            <span class="text-emerald-400 font-bold mb-1">EARLY/RECENT</span>
+                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/1880-1884.png" alt="1880" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-2" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                        </div>
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                            <span class="text-emerald-400 font-bold mb-1">GISTEMP</span>
+                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/3P1.png" alt="3P1" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-3" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                        </div>
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                            <span class="text-emerald-400 font-bold mb-1">REGIONAL</span>
+                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/1951-1980.png" alt="1951" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-4" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                        </div>
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                            <span class="text-emerald-400 font-bold mb-1">TRENDS</span>
+                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/3P2.png" alt="3P2" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-5" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                        </div>
+                    </div>
                 </div>
-                <span id="c3-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
-            </div>
-            <!-- دليل 2 -->
-            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                <span class="text-emerald-400 font-bold mb-1">EARLY VS RECENT</span>
-                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
-                    <img src="assets/1880-1884.png" alt="1880" class="w-full h-full object-cover pointer-events-none">
-                </div>
-                <span id="c3-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
-            </div>
-            <!-- دليل 3 -->
-            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                <span class="text-emerald-400 font-bold mb-1">GISTEMP RECORD</span>
-                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
-                    <img src="assets/3P1.png" alt="3P1" class="w-full h-full object-cover pointer-events-none">
-                </div>
-                <span id="c3-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
-            </div>
-            <!-- دليل 4 -->
-            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                <span class="text-emerald-400 font-bold mb-1">REGIONAL MAP</span>
-                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
-                    <img src="assets/1951-1980.png" alt="1951" class="w-full h-full object-cover pointer-events-none">
-                </div>
-                <span id="c3-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
-            </div>
-            <!-- دليل 5 (يبدأ في الصف الثاني - تحت البطاقة الأولى) -->
-            <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
-                <span class="text-emerald-400 font-bold mb-1">TREND ANALYSIS</span>
-                <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1">
-                    <img src="assets/3P2.png" alt="3P2" class="w-full h-full object-cover pointer-events-none">
-                </div>
-                <span id="c3-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+
             </div>
         </div>
     </div>
-
-    </div>
-   </div>
-
     <!-- الصندوق الأيسر (NASA Orbit Feed) -->
     <div class="col-span-12 md:col-span-3 flex flex-col items-center justify-center w-full">
         <div class="bg-stone-950/90 border-2 border-cyan-900/50 p-4 rounded-xl text-left shadow-2xl w-full backdrop-blur-md cyber-panel cyber-hover">
