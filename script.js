@@ -93,7 +93,7 @@ img.ondragstart = (e) => e.preventDefault();
 function selectCase(caseNum) {
     currentCase = caseNum;
     
-    const hasSeenIntro = (caseNum === 1) ? case1IntroSeen : case2IntroSeen;
+    const hasSeenIntro = (caseNum === 1) ? case1IntroSeen : (caseNum === 2) ? case2IntroSeen : case3IntroSeen;
 
     if (!hasSeenIntro) {
         if (caseNum === 1) case1IntroSeen = true;
@@ -127,7 +127,7 @@ function selectCase(caseNum) {
             introModal.classList.add('opacity-100', 'pointer-events-auto');
         }
     } else {
-        currentPhase = (caseNum === 1) ? case1MaxPhase : case2MaxPhase;
+        currentPhase = (caseNum === 1) ? case1MaxPhase : (caseNum === 2) ? case2MaxPhase : case3MaxPhase;
         const modal = document.getElementById('docModal');
         if (modal) {
             modal.classList.add('active');
@@ -164,24 +164,19 @@ function resetCase() {
         
         if (currentCase === 1) {
             case1MaxPhase = 1;
-            case1IntroSeen = false; // 👈 حطها هنا للقضية الأولى عشان ترجع تظهر المقدمة لو عمل Reset
+            case1IntroSeen = false;
             solvedPhasesC1 = {}; 
             for (let i = 2; i <= 7; i++) {
                 const el = document.getElementById(`c1-ev-${i}`);
-                if (el) {
-                    el.innerText = "LOCKED";
-                    el.className = "text-slate-400 font-bold text-[9px]";
-                }
+            if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
             }
         } else if (currentCase === 2) {
             case2MaxPhase = 1;
-            case2IntroSeen = false; // 👈 وحطها هنا أيضاً للقضية الثانية
+            case2IntroSeen = false;
             solvedPhasesC2 = {}; 
             for (let i = 2; i <= 5; i++) {
                 const el = document.getElementById(`c2-ev-${i}`);
-                if (el) {
-                    el.innerText = "LOCKED";
-                    el.className = "text-slate-400 font-bold text-[9px]";
+                if (el) { el.innerText = "LOCKED"; el.className = "text-slate-400 font-bold text-[9px]"; }
                 }
             }
         }
@@ -349,8 +344,7 @@ function goToPhase(phase) {
     }
     updateDetectiveBoard(phase, currentCase);
 
-    let savedChain = (currentCase === 1) ? solvedPhasesC1[phase] : solvedPhasesC2[phase];
-    if (savedChain) {
+let savedChain = (currentCase === 1) ? solvedPhasesC1[phase] : (currentCase === 2) ? solvedPhasesC2[phase] : solvedPhasesC3[phase];    if (savedChain) {
         const listId = (currentCase === 1 && phase === 7) ? 'causal-list-c1' : (currentCase === 2 && phase === 5) ? 'causal-list' : null;
         if (listId) {
             const container = document.getElementById(listId);
@@ -1027,18 +1021,17 @@ function switchBoardCase(caseNum) {
     const tab1 = document.getElementById('tab-case-1');
     const tab2 = document.getElementById('tab-case-2');
 
-    if (!grid1 || !grid2 || !tab1 || !tab2) return;
+    if (!grid1 || !grid2 || !grid3 || !tab1 || !tab2 || !tab3) return;
 
     if (caseNum === 1) {
         grid1.classList.remove('hidden');
-        grid2.classList.add('hidden');
-        tab1.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow";
-        tab2.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition";
-    } else {
-        grid1.classList.add('hidden');
+        tab1.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow text-center whitespace-nowrap";
+    } else if (caseNum === 2) {
         grid2.classList.remove('hidden');
-        tab2.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-amber-900/80 border border-amber-400 text-amber-200 cursor-pointer transition shadow";
-        tab1.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition";
+        tab2.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-amber-900/80 border border-amber-400 text-amber-200 cursor-pointer transition shadow text-center whitespace-nowrap";
+    } else if (caseNum === 3) {
+        grid3.classList.remove('hidden');
+        tab3.className = "flex-1 py-1.5 px-3 rounded-lg font-bold bg-emerald-900/80 border border-emerald-400 text-emerald-200 cursor-pointer transition shadow text-center whitespace-nowrap";
     }
 }
 
