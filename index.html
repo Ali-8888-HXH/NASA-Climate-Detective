@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Climate Detective - Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="main-body" class="text-amber-100 flex items-center justify-center">
+
+    <div class="fixed top-4 right-4 z-[60]">
+        <button onclick="openCreditsModal()" class="bg-stone-950/90 hover:bg-slate-900 border border-cyan-500/50 hover:border-cyan-400 text-cyan-300 px-3 py-1.5 rounded-lg font-mono text-xs shadow-lg backdrop-blur-md flex items-center gap-1.5 cursor-pointer transition">
+            <span>👥</span> <span>Credits</span>
+        </button>
+    </div>
+
+    <div id="landing-screen" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center transition-all duration-700">
+        <div class="max-w-xl w-full bg-stone-950/85 border-2 border-cyan-500/40 rounded-2xl p-6 md:p-10 shadow-2xl shadow-cyan-950/60 relative overflow-hidden cyber-panel">
+            
+            <div class="flex items-center justify-between text-cyan-400/80 font-mono text-xs border-b border-cyan-900/50 pb-3 mb-6">
+                <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    NASA EARTH SCIENCE DIVISION
+                </span>
+                <span>SYS.V5.0</span>
+            </div>
+
+            <div class="mb-6 space-y-2">
+                <div class="inline-block p-3 rounded-full bg-cyan-950/60 border border-cyan-500/30 mb-2 text-3xl shadow-inner">
+                    🛰️
+                </div>
+                <h1 class="text-2xl md:text-4xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-amber-200 font-mono uppercase">
+                    NASA Climate Detective
+                </h1>
+                <p class="text-slate-300 text-xs md:text-sm max-w-md mx-auto leading-relaxed font-sans pt-1">
+                    Analyze real orbital satellite datasets, uncover climate anomalies, and reconstruct global environmental chains.
+                </p>
+            </div>
+
+            <div class="mb-6 text-left max-w-sm mx-auto">
+                <label for="detective-name-input" class="block text-cyan-300 font-mono text-xs mb-1.5 uppercase tracking-wider">
+                    🆔 Lead Detective Name:
+                </label>
+                <input 
+                    type="text" 
+                    id="detective-name-input" 
+                    placeholder="Type your name here..." 
+                    maxlength="25"
+                    class="w-full bg-slate-900/90 border-2 border-cyan-800/70 focus:border-cyan-400 rounded-lg px-4 py-2.5 text-amber-100 placeholder-slate-500 font-mono text-sm focus:outline-none transition shadow-inner"
+                >
+            </div>
+
+            <button 
+                onclick="startInvestigation()" 
+                class="w-full max-w-sm mx-auto bg-gradient-to-r from-cyan-600 to-sky-600 hover:from-cyan-500 hover:to-sky-500 text-slate-950 font-extrabold py-3 px-6 rounded-xl font-mono text-sm md:text-base tracking-wide uppercase cursor-pointer shadow-lg shadow-cyan-500/30 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                <span>🚀 Start Investigation</span>
+            </button>
+
+            <p class="text-slate-500 font-mono text-[10px] mt-6">
+                AUTHORIZED ACCESS // SATELLITE TELEMETRY READY
+            </p>
+        </div>
+    </div> 
+
+    <div class="room-container flex flex-col justify-between p-6 relative">
+
+     <div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 items-center max-w-7xl mx-auto w-full pt-4 px-2">            
+    
+    <!-- (NSIDC Metrics) -->
+    <div class="col-span-12 md:col-span-3 flex flex-col items-center justify-center gap-2">
+        <div class="bg-stone-950/90 border-2 border-cyan-900/50 p-4 rounded-xl text-left shadow-2xl w-full backdrop-blur-md cyber-panel cyber-hover">
+            <div class="font-bold mb-2 flex items-center justify-between" style="font-size: 0.85em;">
+                <span class="text-cyan-400">📊 NSIDC METRICS</span>
+                <span>🟢</span>
+            </div>
+            <div class="space-y-1 text-slate-300" style="font-size: 0.9em;">
+                <p>Baseline: <span class="text-amber-300">1979-Present</span></p>
+                <p>Status: <span id="metrics-status" class="text-amber-400 font-bold">Investigation</span></p>
+                <p>Case 01 Evidence: <span id="evidence-counter-1" class="text-emerald-400 font-bold">0 / 6</span></p>
+                <p>Case 02 Evidence: <span id="evidence-counter-2" class="text-cyan-400 font-bold">0 / 5</span></p>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between bg-slate-950/90 border-2 border-cyan-900/40 px-3 py-2 rounded-xl w-full backdrop-blur-md">                    
+            <span class="text-amber-400 font-bold" style="font-size: 0.85em;">MAIN FONT:</span>
+            <div class="flex gap-1">
+                <button onclick="changeMainFontSize(-1)" class="bg-stone-800 hover:bg-amber-800 text-amber-200 px-2 py-0.5 rounded font-bold cursor-pointer transition" style="font-size: 0.9em;">A-</button>
+                <button onclick="resetMainFontSize()" class="bg-stone-800 hover:bg-stone-700 text-stone-300 px-1.5 py-0.5 rounded cursor-pointer transition" style="font-size: 0.8em;">Reset</button>
+                <button onclick="changeMainFontSize(1)" class="bg-stone-800 hover:bg-amber-800 text-amber-200 px-2 py-0.5 rounded font-bold cursor-pointer transition" style="font-size: 0.9em;">A+</button>
+            </div>
+        </div>
+    </div>
+
+   <!-- الصندوق الأوسط (Interactive Multi-Case Detective Evidence Board) -->
+    <div class="col-span-12 md:col-span-6 flex flex-col items-center w-full">
+        <div class="bg-slate-900/95 border-4 border-cyan-950 p-4 rounded-xl shadow-2xl w-full max-w-lg relative backdrop-blur-md shadow-cyan-950/60 cyber-panel cyber-hover">
+            
+            <!-- عنوان اللوحة -->
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-900 text-amber-100 px-4 py-0.5 rounded font-bold font-mono text-xs shadow-lg border border-red-500/50 flex items-center gap-1.5 whitespace-nowrap">
+                <span>📌</span> <span>DETECTIVE EVIDENCE BOARD</span>
+            </div>
+            
+            <!-- شريط عرض اسم المحقق المسؤول -->
+            <div class="bg-slate-950 border border-cyan-500/30 px-3 py-1.5 rounded-lg mb-2 flex items-center justify-between text-xs font-mono shadow-inner mt-2">
+                <span class="text-slate-400">LEAD DETECTIVE:</span>
+                <span id="active-detective-badge" class="text-cyan-300 font-bold uppercase tracking-wider text-sm">UNASSIGNED</span>
+            </div>
+
+            <!-- أزرار التبديل بين القضايا (Tabs) -->
+            <div class="flex gap-2 mb-2 font-mono text-xs">
+                <button id="tab-case-1" onclick="switchBoardCase(1)" class="flex-1 py-1.5 px-3 rounded-lg font-bold bg-cyan-900/80 border border-cyan-400 text-cyan-200 cursor-pointer transition shadow">
+                    🧊 CASE 01: VANISHING ICE
+                </button>
+                <button id="tab-case-2" onclick="switchBoardCase(2)" class="flex-1 py-1.5 px-3 rounded-lg font-bold bg-slate-950/80 border border-slate-700 text-slate-400 hover:text-cyan-300 cursor-pointer transition">
+                    🌾 CASE 02: MISSING WHEAT
+                </button>
+            </div>
+
+            <!-- مستطيل الحالة (تم تعديل النص الإنجليزي ليصف القضايا التي في الأسفل) -->
+            <div class="bg-slate-950/90 border border-cyan-500/30 border-l-4 border-l-cyan-400 px-3 py-2 rounded-lg mb-2.5 text-left font-mono shadow-inner">
+                <div class="flex items-center justify-between">
+                    <p id="board-title-status" class="text-cyan-300 font-bold text-[11px] tracking-wide">Status: Active Investigation</p>
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                </div>
+                <p id="board-status-text" class="text-slate-300 text-[11px] mt-0.5 leading-snug">Select a case file below to begin satellite analysis.</p>
+            </div>
+
+           <!-- لوحة التحقيق التفاعلية القابلة للسحب -->
+            <div id="detective-board-wrapper" class="bg-stone-950/90 border-2 border-stone-800 p-3 rounded-lg relative overflow-auto max-h-[210px] min-h-[175px] shadow-inner cursor-grab select-none">
+                
+                <!-- لوحة أدلة القضية الأولى (Case 01) -->
+                <div id="board-grid-case-1" class="relative min-w-[580px] min-h-[180px]">
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+                        <!-- ربط الصف الأول أفقياً: من البطاقة 1 إلى 2 إلى 3 إلى 4 -->
+                        <line x1="12%" y1="28%" x2="37%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="37%" y1="28%" x2="63%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="63%" y1="28%" x2="88%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        
+                        <!-- النزول من آخر الصف الأول إلى بداية الصف الثاني -->
+                        <line x1="88%" y1="28%" x2="12.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-60" />
+                        
+                        <!-- ربط الصف الثاني أفقياً -->
+                        <line x1="12.5%" y1="75%" x2="37.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="37.5%" y1="75%" x2="62.5%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                    </svg>
+
+                    <div class="grid grid-cols-4 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
+                        <!-- 1. 1979 Baseline -->
+                        <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">1979 BASELINE</span>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
+                                <img src="assets/P1.png" alt="P1" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c1-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
+                        </div>
+                        <!-- 2. Seasonal Cycles -->
+                        <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">SEASONAL CYCLES</span>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
+                                <img src="assets/P3.png" alt="P3" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c1-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- 3. 40+ Yr Trend -->
+                        <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">40+ YR TREND</span>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
+                                <img src="assets/P2.png" alt="P2" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c1-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- 4. Spatial Extent -->
+                        <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">SPATIAL EXTENT</span>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
+                                <img src="assets/P4.png" alt="P4" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c1-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- 5. Ice Sectors -->
+                        <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">ICE SECTORS</span>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
+                                <img src="assets/P5.png" alt="P5" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c1-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- 6. Temp Anomaly -->
+                        <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">TEMP ANOMALY</span>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
+                                <img src="assets/P6.png" alt="P6" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c1-ev-6" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- 7. Albedo Feedback -->
+                        <div class="bg-slate-900/95 border border-cyan-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">ALBEDO FEEDBACK</span>
+                            <div class="w-12 h-9 bg-black rounded border border-cyan-900 overflow-hidden mb-1">
+                                <img src="assets/P7.png" alt="P7" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c1-ev-7" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- لوحة أدلة القضية الثانية (Case 02) -->
+                <div id="board-grid-case-2" class="relative min-w-[460px] min-h-[160px] hidden">
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="18%" y1="28%" x2="50%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="50%" y1="28%" x2="82%" y2="28%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="82%" y1="28%" x2="18%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-60" />
+                        <line x1="18%" y1="75%" x2="50%" y2="75%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                    </svg>
+
+                    <div class="grid grid-cols-3 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
+                        <!-- دليل 1: 2P0 -->
+                        <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">WHEAT OUTLOOK</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
+                                <img src="assets/2P0.png" alt="2P0" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c2-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
+                        </div>
+                        <!-- دليل 2: 2P1 -->
+                        <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">HEATWAVE MAP</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
+                                <img src="assets/2P1.png" alt="2P1" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c2-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- دليل 3: 2P2 -->
+                        <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">MODIS NDVI</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
+                                <img src="assets/2P2.png" alt="2P2" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c2-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- دليل 4: NASA POWER -->
+                        <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">NASA POWER</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1 flex items-center justify-center text-red-400 font-bold text-[10px]">
+                                45.1°C
+                            </div>
+                            <span id="c2-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                        <!-- دليل 5: 2P4 -->
+                        <div class="bg-slate-900/95 border border-amber-500/40 p-1.5 rounded shadow flex flex-col items-center">
+                            <span class="text-amber-400 font-bold mb-1">SYNTHESIS MAPPING</span>
+                            <div class="w-12 h-9 bg-black rounded border border-amber-900 overflow-hidden mb-1">
+                                <img src="assets/2P4.png" alt="2P4" class="w-full h-full object-cover pointer-events-none">
+                            </div>
+                            <span id="c2-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- الصندوق الأيسر (NASA Orbit Feed) -->
+    <div class="col-span-12 md:col-span-3 flex flex-col items-center justify-center w-full">
+        <div class="bg-stone-950/90 border-2 border-cyan-900/50 p-4 rounded-xl text-left shadow-2xl w-full backdrop-blur-md cyber-panel cyber-hover">
+            <div class="font-bold mb-2 flex items-center justify-between" style="font-size: 0.85em;">
+                <span class="text-amber-400">🛰️ NASA ORBIT FEED</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            </div>
+            <div class="space-y-1 text-stone-300" style="font-size: 0.9em;">
+                <p>Source: <span class="text-white">NASA Orbiting Sensors</span></p>
+                <p>View: <span class="text-amber-200">Global System</span></p>
+                <p>Sync: <span class="text-cyan-300">Active</span></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+       <div id="desk-drawer" class="desk-surface rounded-t-3xl max-w-6xl mx-auto w-full flex flex-col justify-between relative shadow-2xl px-4 md:px-8 pt-2 pb-4 transition-all duration-75" style="height: 210px; min-height: 180px; max-height: 75vh;">
+    
+    <div id="drawer-handle" class="w-full py-1.5 flex flex-col items-center justify-center cursor-ns-resize touch-none group">
+        <div class="w-12 h-1.5 bg-cyan-500/50 group-hover:bg-cyan-400 rounded-full transition"></div>
+        <span class="text-cyan-400/70 font-mono mt-1 select-none" style="font-size: 0.75em;">
+            COMMAND CONSOLE
+        </span>
+    </div>
+
+    <div class="flex-1 flex flex-row items-center justify-center gap-3 md:gap-6 overflow-y-auto pt-3">
+        
+        <!-- Case 01 -->
+        <div onclick="selectCase(1)" class="bg-slate-900/90 hover:bg-slate-800 border-2 border-cyan-500/50 hover:border-cyan-400 flex-1 max-w-[14rem] min-h-[7rem] h-auto rounded-lg shadow-2xl shadow-cyan-950/50 cursor-pointer transition transform hover:-translate-y-1 flex flex-col justify-between p-3 md:p-4 relative group z-10 backdrop-blur-md">
+            <div class="absolute -top-3 left-3 bg-cyan-950 border border-cyan-500/60 text-cyan-300 px-2.5 py-0.5 rounded-t font-bold uppercase" style="font-size: 0.7em;">
+                📁 CASE 01
+            </div>
+            <div class="mt-2">
+                <h3 class="text-cyan-100 font-bold leading-tight" style="font-size: 0.85em;">The Vanishing Ice</h3>
+                <p class="text-slate-400 mt-1 leading-snug" style="font-size: 0.72em;">Arctic Sea Ice minimum anomalies.</p>
+            </div>
+            <div class="text-right text-cyan-400 font-bold group-hover:translate-x-1 transition mt-2" style="font-size: 0.75em;">
+                Open File ➔
+            </div>
+        </div>
+
+        <!-- Case 02 -->
+        <div onclick="selectCase(2)" class="bg-slate-900/90 hover:bg-slate-800 border-2 border-cyan-500/50 hover:border-cyan-400 flex-1 max-w-[14rem] min-h-[7rem] h-auto rounded-lg shadow-2xl shadow-cyan-950/50 cursor-pointer transition transform hover:-translate-y-1 flex flex-col justify-between p-3 md:p-4 relative group z-10 backdrop-blur-md">
+            <div class="absolute -top-3 left-3 bg-cyan-950 border border-cyan-500/60 text-cyan-300 px-2.5 py-0.5 rounded-t font-bold uppercase" style="font-size: 0.7em;">
+                📁 CASE 02
+            </div>
+            <div class="mt-2">
+                <h3 class="text-cyan-100 font-bold leading-tight" style="font-size: 0.85em;">The Missing Wheat</h3>
+                <p class="text-slate-400 mt-1 leading-snug" style="font-size: 0.72em;">South Asia heatwave & export ban.</p>
+            </div>
+            <div class="text-right text-cyan-400 font-bold group-hover:translate-x-1 transition mt-2" style="font-size: 0.75em;">
+                Open File ➔
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <div id="docModal" class="document-modal fixed inset-6 md:inset-16 z-50 rounded-2xl border-4 border-stone-500 p-6 md:p-8 flex flex-col justify-between overflow-y-auto">
+        <div class="space-y-4">
+            <div class="flex justify-between items-center border-b border-stone-400 pb-3">
+                <div>
+                    <span id="doc-ref-tag" class="bg-amber-800 text-amber-100 px-2 py-0.5 rounded" style="font-size: 0.85em;">PHASE 01 — CASE FILE</span>
+                    <h2 id="doc-title" class="font-bold font-serif text-stone-900 mt-1" style="font-size: 1.4em;">The Vanishing Ice</h2>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1 bg-stone-300 border border-stone-400 px-2 py-1 rounded-lg">
+                        <span class="text-[10px] text-stone-800 font-bold">CASE FONT:</span>
+                        <button onclick="changeModalFontSize(-1)" class="bg-stone-800 hover:bg-stone-900 text-amber-100 text-xs px-2 py-0.5 rounded font-bold cursor-pointer transition">A-</button>
+                        <button onclick="resetModalFontSize()" class="bg-stone-400 hover:bg-stone-500 text-stone-900 text-[10px] px-1.5 py-0.5 rounded cursor-pointer transition font-bold">Reset</button>
+                        <button onclick="changeModalFontSize(1)" class="bg-stone-800 hover:bg-stone-900 text-amber-100 text-xs px-2 py-0.5 rounded font-bold cursor-pointer transition">A+</button>
+                    </div>
+
+                    <button onclick="closeDocumentModal()" class="bg-stone-900 hover:bg-stone-800 text-white w-8 h-8 rounded-full font-bold flex items-center justify-center cursor-pointer shadow">
+                        ✕
+                    </button>
+                </div>
+            </div>
+
+            <div id="modal-body-content" class="space-y-3 text-stone-800 leading-relaxed font-serif"></div>
+
+            <div id="feedback-terminal" class="p-3 rounded-lg text-xs font-mono hidden"></div>
+
+            <div id="exhibit-box" class="border-2 border-stone-400 rounded-lg p-3 bg-stone-900 text-stone-100 shadow-inner"></div>
+        </div>
+
+        <div class="pt-4 border-t border-stone-400 flex justify-between items-center text-stone-600 font-mono mt-4" style="font-size: 0.9em;">
+            <div class="flex gap-2">
+                <button id="back-btn" onclick="goToPreviousPhase()" class="bg-amber-800 hover:bg-amber-900 text-amber-100 px-3 py-1.5 rounded font-bold cursor-pointer hidden shadow transition">
+                    ⬅ Previous Phase
+                </button>
+                <button onclick="resetCase()" class="bg-red-900 hover:bg-red-950 text-red-100 px-3 py-1.5 rounded font-bold cursor-pointer shadow transition">
+                    🔄 Reset Case
+                </button>
+            </div>
+            <span id="footer-status">NASA Climate Detective Engine v5.0</span>
+            <span id="page-indicator">Phase 1 of 6</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+   
+    <!-- نافذة المقدمة الدرامية (Case Intro Briefing Modal) -->
+    <div id="introModal" class="fixed inset-0 z-[65] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-stone-950 border-2 border-cyan-500/60 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl shadow-cyan-950/80 relative text-left cyber-panel">
+            
+            <div class="flex justify-between items-center border-b border-cyan-900/60 pb-3 mb-4 font-mono text-xs">
+                <span id="intro-ref-tag" class="text-amber-400 font-bold uppercase tracking-wider">
+                    🔒 TOP SECRET // NASA CLIMATE ARCHIVE
+                </span>
+                <span class="text-cyan-400/70 animate-pulse">CLASSIFIED BRIEFING</span>
+            </div>
+
+            <h2 id="intro-title" class="text-xl md:text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-amber-200 mb-3"></h2>
+
+            <div id="intro-body" class="space-y-3 font-serif text-slate-300 text-sm md:text-base leading-relaxed bg-slate-900/80 p-4 rounded-xl border border-cyan-900/40 shadow-inner mb-6"></div>
+
+            <div class="text-center">
+                <button onclick="startCaseFromIntro()" class="bg-gradient-to-r from-cyan-600 to-sky-600 hover:from-cyan-500 hover:to-sky-500 text-slate-950 font-extrabold py-2.5 px-6 rounded-xl font-mono text-sm tracking-wide uppercase cursor-pointer shadow-lg shadow-cyan-500/30 transition transform hover:-translate-y-0.5">
+                    📂 Accept Briefing & Start Investigation ➔
+                </button>
+            </div>
+        </div>
+    </div>
+    
+<!-- نافذة المبدعين (Credits Modal) مع الكود البرمجية المدمجة -->
+   <div id="creditsModal" class="fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-stone-950 border-2 border-cyan-500/60 rounded-2xl max-w-md w-full p-6 shadow-2xl shadow-cyan-950/80 relative text-left cyber-panel">
+            
+            <div class="flex justify-between items-center border-b border-cyan-900/60 pb-3 mb-4">
+                <h3 class="text-cyan-300 font-mono font-bold text-sm flex items-center gap-2">
+                    <span>🛰️</span> PROJECT CREATORS & TEAM
+                </h3>
+                <button onclick="closeCreditsModal()" class="bg-stone-900 hover:bg-stone-800 text-slate-300 hover:text-white w-7 h-7 rounded-full font-bold flex items-center justify-center cursor-pointer transition text-xs">
+                    ✕
+                </button>
+            </div>
+
+            <div class="space-y-3 font-mono text-xs">
+                <p class="text-slate-400 mb-2">Developed with precision for NASA Space Apps Challenge:</p>
+                
+                <div class="bg-slate-900/90 border border-cyan-900/50 p-3 rounded-lg flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                    <span class="text-cyan-100 font-bold">Ali Mohammed Sulaiman Sabhani</span>
+                </div>
+                
+                <div class="bg-slate-900/90 border border-cyan-900/50 p-3 rounded-lg flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                    <span class="text-cyan-100 font-bold">Ayesha Waheed</span>
+                </div>
+                
+                <div class="bg-slate-900/90 border border-cyan-900/50 p-3 rounded-lg flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                    <span class="text-cyan-100 font-bold">Syeda Samin Fatima Rizvi</span>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-3 border-t border-cyan-900/40 text-center">
+                <button onclick="closeCreditsModal()" class="bg-cyan-700 hover:bg-cyan-600 text-slate-950 font-bold px-5 py-2 rounded-lg font-mono text-xs uppercase cursor-pointer shadow transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
