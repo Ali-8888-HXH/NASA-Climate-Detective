@@ -1213,7 +1213,7 @@ function switchBoardCase(caseNum) {
 }
 
 // ==========================================
-// --- تحديث حالة الأدلة المفتوحة لكل قضية ---
+// --- تحديث حالة الأدلة المفتوحة لكل قضية -----
 // ==========================================
 function unlockEvidenceCard(elementId) {
     const el = document.getElementById(elementId);
