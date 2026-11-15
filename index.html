@@ -222,40 +222,40 @@
                     </div>
                 </div>
 
-                <!-- لوحة أدلة القضية الثالثة (Case 03 - مصممة أفقياً بالكامل بـ 5 بطاقات متجاورة وبدون تداخل) -->
-                <div id="board-grid-case-3" class="relative min-w-[540px] min-h-[160px] hidden">
+               <!-- لوحة أدلة القضية الثالثة (Case 03 - مصممة بنفس تنسيق القضية الثانية تماماً) -->
+                <div id="board-grid-case-3" class="relative min-w-[460px] min-h-[160px] hidden">
                     <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="10%" y1="40%" x2="30%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-                        <line x1="30%" y1="40%" x2="50%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-                        <line x1="50%" y1="40%" x2="70%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
-                        <line x1="70%" y1="40%" x2="90%" y2="40%" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="18%" y1="28%" x2="50%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="50%" y1="28%" x2="82%" y2="28%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
+                        <line x1="82%" y1="28%" x2="18%" y2="75%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-60" />
+                        <line x1="18%" y1="75%" x2="50%" y2="75%" stroke="#10b981" stroke-width="2" stroke-dasharray="4" class="opacity-80 animate-pulse" />
                     </svg>
 
-                    <div class="grid grid-cols-5 gap-2 relative z-10 text-center font-mono text-[9px] pointer-events-auto p-1">
-                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                    <div class="grid grid-cols-3 gap-3 relative z-10 text-center font-mono text-[10px] pointer-events-auto p-1">
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-emerald-400 font-bold mb-1">ANOMALY</span>
-                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/2024.png" alt="2024" class="w-full h-full object-cover pointer-events-none"></div>
-                            <span id="c3-ev-1" class="text-emerald-400 font-bold text-[8px]">UNLOCKED</span>
+                            <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/2024.png" alt="2024" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-1" class="text-emerald-400 font-bold text-[9px]">UNLOCKED</span>
                         </div>
-                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-emerald-400 font-bold mb-1">EARLY/RECENT</span>
-                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/1880-1884.png" alt="1880" class="w-full h-full object-cover pointer-events-none"></div>
-                            <span id="c3-ev-2" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                            <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/1880-1884.png" alt="1880" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-2" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-emerald-400 font-bold mb-1">GISTEMP</span>
-                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/3P1.png" alt="3P1" class="w-full h-full object-cover pointer-events-none"></div>
-                            <span id="c3-ev-3" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                            <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/3P1.png" alt="3P1" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-3" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-emerald-400 font-bold mb-1">REGIONAL</span>
-                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/1951-1980.png" alt="1951" class="w-full h-full object-cover pointer-events-none"></div>
-                            <span id="c3-ev-4" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                            <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/1951-1980.png" alt="1951" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-4" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
-                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1 rounded shadow flex flex-col items-center">
+                        <div class="bg-slate-900/95 border border-emerald-500/40 p-1.5 rounded shadow flex flex-col items-center">
                             <span class="text-emerald-400 font-bold mb-1">TRENDS</span>
-                            <div class="w-10 h-8 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/3P2.png" alt="3P2" class="w-full h-full object-cover pointer-events-none"></div>
-                            <span id="c3-ev-5" class="text-slate-400 font-bold text-[8px]">LOCKED</span>
+                            <div class="w-12 h-9 bg-black rounded border border-emerald-900 overflow-hidden mb-1"><img src="assets/3P2.png" alt="3P2" class="w-full h-full object-cover pointer-events-none"></div>
+                            <span id="c3-ev-5" class="text-slate-400 font-bold text-[9px]">LOCKED</span>
                         </div>
                     </div>
                 </div>
