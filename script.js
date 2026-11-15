@@ -794,13 +794,22 @@ function loadCase3Phases(phase, body) {
         `;
         loadExhibit('🛰️ EXHIBIT #01 — GLOBAL TEMPERATURE ANOMALY (NASA SVS)', 'assets/2024.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">Source: NASA Goddard Institute for Space Studies (GISS)</div>`);
     }
-    else if (phase === 2) {
-        updateHeader('PHASE 02 — THE FIRST CLUE', 'Evidence #01 — What Does "Normal Temperature" Mean?', 'Phase 2 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Analyzing temperature anomaly maps.');
+   else if (phase === 2) {
+        updateHeader('PHASE 02 — THE FIRST CLUE', 'Evidence #01 — Early vs Recent Maps', 'Phase 2 of 6', c1Count, c2Count, c3Count, 'Status: Active Investigation', 'Comparing historical and recent temperature anomaly maps.');
         body.innerHTML = `
             <p>A temperature anomaly measures how much warmer or colder a place was compared with its historical reference average (Positive = warmer, Negative = colder).</p>
+            
+            <div class="my-3 flex items-center justify-center gap-3 bg-stone-900 p-2.5 rounded-lg border border-cyan-500/30">
+                <span class="text-cyan-300 font-mono text-xs font-bold">🔍 Select Map View:</span>
+                <button onclick="switchCase3Map('1880-1884')" id="btn-map-1" class="bg-cyan-900 text-cyan-200 border border-cyan-400 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition">1880-1884 (Early)</button>
+                <button onclick="switchCase3Map('2024')" id="btn-map-2" class="bg-stone-800 text-stone-300 border border-stone-700 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition">Recent (2024)</button>
+            </div>
+
             <div class="bg-amber-100 border border-amber-300 p-3 rounded-lg mt-3"><div class="flex flex-col gap-2" id="c3-p2-options"></div></div>
         `;
-        loadExhibit('📊 EXHIBIT #02 — EARLY VS RECENT MAPS', 'assets/1880-1884.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs">NASA World of Change Historical Maps</div>`);
+        
+        loadExhibit('📊 EXHIBIT #02 — EARLY VS RECENT MAPS', 'assets/1880-1884.png', `<div class="mt-2 bg-stone-950 p-2 rounded text-cyan-300 font-mono text-xs flex justify-between items-center"><span>Active Map: <span id="current-map-label" class="font-bold text-amber-300">1880-1884</span></span><span>NASA World of Change Historical Maps</span></div>`);
+        
         renderOptions('c3-p2-options', [
             { text: 'The region has the highest absolute temperature on Earth.', correct: false },
             { text: 'The region is warmer than its reference-period average.', correct: true },
@@ -1303,4 +1312,28 @@ function closeIntroModal() {
         introModal.classList.remove('opacity-100', 'pointer-events-auto');
         introModal.classList.add('opacity-0', 'pointer-events-none');
     }
+}
+function switchCase3Map(mapYear) {
+    const activeImg = document.getElementById('active-exhibit-img');
+    const mapLabel = document.getElementById('current-map-label');
+    const btn1 = document.getElementById('btn-map-1');
+    const btn2 = document.getElementById('btn-map-2');
+    
+    if (activeImg) {
+        activeImg.src = `assets/${mapYear}.png`;
+    }
+    if (mapLabel) {
+        mapLabel.innerText = mapYear;
+    }
+    
+    if (btn1 && btn2) {
+        if (mapYear === '1880-1884') {
+            btn1.className = "bg-cyan-900 text-cyan-200 border border-cyan-400 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition";
+            btn2.className = "bg-stone-800 text-stone-300 border border-stone-700 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition";
+        } else {
+            btn2.className = "bg-cyan-900 text-cyan-200 border border-cyan-400 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition";
+            btn1.className = "bg-stone-800 text-stone-300 border border-stone-700 px-3 py-1 rounded text-xs font-mono font-bold cursor-pointer transition";
+        }
+    }
+    resetZoom();
 }
